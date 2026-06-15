@@ -1,2 +1,2 @@
 # TareaSemestralDOO
-Repositorio para la tarea semestral de Desarrollo Orientado a Objeto
+Integrantes: Esteban Andrés Astete Cifuentes, Joel Tomás Andrés Rojas Seals
