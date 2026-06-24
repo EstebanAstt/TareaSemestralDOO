@@ -1,4 +1,8 @@
 package modelo.disciplina;
 
-public class Disciplina {
+import modelo.Torneo;
+
+public interface Disciplina {
+    void getPuntajes(Torneo torneo);
+    boolean permiteEmpate();
 }
