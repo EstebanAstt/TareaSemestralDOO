@@ -8,7 +8,8 @@ public class Ajedrez implements Disciplina {
     TorneoFormato formatoAjedrez;
     int puntajesAjedrez;
 
-    public void setFormatoAjedrez(TorneoFormato formatoAjedrez){
+    @Override
+    public void setFormato(TorneoFormato formatoAjedrez){
         this.formatoAjedrez = formatoAjedrez;
     }
 

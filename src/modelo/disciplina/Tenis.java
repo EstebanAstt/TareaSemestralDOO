@@ -8,7 +8,8 @@ public class Tenis implements Disciplina {
     TorneoFormato formatoTenis;
     int puntajesTenis;
 
-    public void setFormatoTenis(TorneoFormato formatoTenis){
+    @Override
+    public void setFormato(TorneoFormato formatoTenis){
         this.formatoTenis = formatoTenis;
     }
 

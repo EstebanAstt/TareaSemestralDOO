@@ -8,7 +8,8 @@ public class Carrera implements Disciplina {
     TorneoFormato formatoCarrera;
     int puntajesCarrera;
 
-    public void setFormatoCarrera(TorneoFormato formatoCarrera){
+    @Override
+    public void setFormato(TorneoFormato formatoCarrera){
         this.formatoCarrera = formatoCarrera;
     }
 

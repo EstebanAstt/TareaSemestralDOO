@@ -9,7 +9,8 @@ public class Futbol implements Disciplina {
     int puntajesFutbol;
 
     /** Este tipo de torneo permite todos los formatos posibles */
-    public void setFormatoFutbol(TorneoFormato formatoFutbol){
+    @Override
+    public void setFormato(TorneoFormato formatoFutbol){
         this.formatoFutbol = formatoFutbol;
     }
 

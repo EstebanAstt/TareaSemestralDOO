@@ -8,7 +8,8 @@ public class Basket implements Disciplina {
     TorneoFormato formatoBasket;
     int puntajesBasket;
 
-    public void setFormatoBasket(TorneoFormato formatoBasket){
+    @Override
+    public void setFormato(TorneoFormato formatoBasket){
         this.formatoBasket = formatoBasket;
     }
 
