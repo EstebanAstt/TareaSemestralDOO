@@ -17,18 +17,13 @@ import java.util.List;
  * BaseWindow es una plantilla para hacer lo basico para una ventana, un fondo y botones, en un futuro se puede anadir
  * mejoras como botones de seleccion unica, seleccion multiple.
  */
-public abstract class BaseWindow extends JFrame {
+public abstract class BaseWindow extends JPanel {
 
     protected BufferedImage backgroundImage;
+    protected AppWindow appWindow;
 
-    public BaseWindow(String title) {
-        super(title);
-        // configuración comun a todas las ventanas
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 650);
-        setMinimumSize(new Dimension(800, 500));
-        setLocationRelativeTo(null);
-        setResizable(true);
+    public BaseWindow(AppWindow appWindow) {
+        this.appWindow = appWindow;
     }
 
     // se llama con el nombre del archivo, lo busca en Resources
