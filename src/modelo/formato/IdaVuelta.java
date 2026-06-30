@@ -7,4 +7,9 @@ public class IdaVuelta implements TorneoFormato{
     public void setTorneoFormato(Equipo equipoTorneo){
         System.out.println("Formato Generado: Ida y Vuelta");
     }
+
+    @Override
+    public String getNombreFormato(){
+        return "Ida y Vuelta";
+    }
 }

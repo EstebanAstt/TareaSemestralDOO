@@ -7,4 +7,9 @@ public class PartidoUnico implements TorneoFormato {
     public void setTorneoFormato(Equipo equipoTorneo){
         System.out.println("Formato Generado: Partido Único");
     }
+
+    @Override
+    public String getNombreFormato(){
+        return "Partido Único";
+    }
 }
