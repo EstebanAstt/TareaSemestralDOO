@@ -2,7 +2,6 @@ package modelo.disciplina;
 
 import modelo.MatchResultado;
 import modelo.formato.TorneoFormato;
-
 import java.util.ArrayList;
 
 public class Futbol implements Disciplina {

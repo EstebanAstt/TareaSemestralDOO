@@ -2,9 +2,7 @@ package modelo.disciplina;
 
 import modelo.DeterminarGanador;
 import modelo.MatchResultado;
-import modelo.Torneo;
 import modelo.formato.TorneoFormato;
-
 import java.util.ArrayList;
 
 public class Basket implements Disciplina {
@@ -55,7 +53,6 @@ public class Basket implements Disciplina {
         if (resultado.getOutcome() == DeterminarGanador.EMPATE){
             validacion = false;
         }
-
         double puntajeUno = resultado.getPuntajeUno();
         double puntajeDos = resultado.getPuntajeDos();
 
