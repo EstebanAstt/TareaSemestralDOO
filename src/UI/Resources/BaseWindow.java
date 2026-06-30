@@ -1,12 +1,22 @@
-package UI;
+package UI.Resources;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.List;
 
+/**
+ * BaseWindow es una plantilla para hacer lo basico para una ventana, un fondo y botones, en un futuro se puede anadir
+ * mejoras como botones de seleccion unica, seleccion multiple.
+ */
 public abstract class BaseWindow extends JFrame {
 
     protected BufferedImage backgroundImage;
@@ -92,6 +102,76 @@ public abstract class BaseWindow extends JFrame {
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
+    }
+
+    /**
+     * Construye un panel de búsqueda reutilizable: campo de texto + lista filtrable.
+     *
+     *
+     * @param items     lista completa de elementos a mostrar/filtrar
+     * @param onSelect  qué hacer cuando el usuario hace doble clic / selecciona un elemento
+     */
+    protected <T extends SearchableItem> JPanel buildSearchPanel(
+            List<T> items, Consumer<T> onSelect) {
+
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
+        panel.setOpaque(false);
+
+        // ── Campo de búsqueda ──────────────────────────────────────────
+        JTextField searchField = new JTextField();
+        searchField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        searchField.putClientProperty("JTextField.placeholderText", "Buscar...");
+
+        // ── Lista de resultados ────────────────────────────────────────
+        DefaultListModel<T> listModel = new DefaultListModel<>();
+        items.forEach(listModel::addElement);
+
+        JList<T> resultList = new JList<>(listModel);
+        resultList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value,
+                                                          int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof SearchableItem item) {
+                    setText(item.getDisplayLabel());
+                }
+                return this;
+            }
+        });
+
+        // aca se filtra mientras se escribe
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            private void filtrar() {
+                String query = searchField.getText().toLowerCase().trim();
+                listModel.clear();
+                for (T item : items) {
+                    if (item.getSearchableText().toLowerCase().contains(query)) {
+                        listModel.addElement(item);
+                    }
+                }
+            }
+            public void insertUpdate(DocumentEvent e) { filtrar(); }
+            public void removeUpdate(DocumentEvent e) { filtrar(); }
+            public void changedUpdate(DocumentEvent e) { filtrar(); }
+        });
+
+        // ── Selección (doble clic abre el detalle) ─────────────────────
+        resultList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    T selected = resultList.getSelectedValue();
+                    if (selected != null && onSelect != null) {
+                        onSelect.accept(selected);
+                    }
+                }
+            }
+        });
+
+        panel.add(searchField, BorderLayout.NORTH);
+        panel.add(new JScrollPane(resultList), BorderLayout.CENTER);
+
+        return panel;
     }
     // Cada ventana construye su propio metodo de inicializacion
     protected abstract void initUI();
