@@ -12,7 +12,7 @@ public class OrganizadorStrategy implements RolStrategy {
     }
 
     @Override
-    public void ejecutarOpcion(String opcion, JFrame ventanaActual) {
+    public void ejecutarOpcion(String opcion, JPanel panelActual) {
         switch (opcion) {
             case "Crear Torneo" -> {
                 // new CrearTorneo().setVisible(true);
