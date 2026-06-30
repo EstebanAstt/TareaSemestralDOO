@@ -9,7 +9,7 @@ public interface Disciplina {
     int getPuntajes(Torneo torneo);
 
     /** Se configura el formato del tipo de disciplina */
-    void setFormato(TorneoFormato formato);
+    void setFormato (TorneoFormato formato);
 
     /** Permite revisar que tipo de disciplina permite empates */
     boolean permiteEmpate();
