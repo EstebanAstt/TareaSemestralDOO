@@ -11,7 +11,7 @@ public class EspectadorStrategy implements RolStrategy {
     }
 
     @Override
-    public void ejecutarOpcion(String opcion, JFrame ventanaActual) {
+    public void ejecutarOpcion(String opcion, JPanel actualPanel) {
         switch (opcion) {
             case "Ver Torneos" -> {
                 // new VerTorneos(false).setVisible(true); // false = modo espectador (sin eliminar)
