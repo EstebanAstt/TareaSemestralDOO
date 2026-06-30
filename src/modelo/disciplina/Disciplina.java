@@ -1,16 +1,28 @@
 package modelo.disciplina;
 
-import modelo.Torneo;
+import modelo.MatchResultado;
 import modelo.formato.TorneoFormato;
+import java.util.ArrayList;
 
+/** A partir del patrón Strategy, las disciplinas heredan esta interfaz */
 public interface Disciplina {
-    /** Hasta ahora se retorna un número, posteriormente se debería
-     *  retornar los puntajes de cada equipo por separado (como una lista) */
-    int getPuntajes(Torneo torneo);
 
-    /** Se configura el formato del tipo de disciplina */
-    void setFormato (TorneoFormato formato);
+    /** Métodos de puntaje, cada disciplina aplica distinto puntaje
+     *  a las victorias, perdidas y empates, estos métodos reemplazan getPuntaje */
+    double puntajeVictoria();
+    double puntajeEmpate();
+    double puntajePerdida();
 
-    /** Permite revisar que tipo de disciplina permite empates */
+    /** Verifica que el formato sea válido dependiendo la disciplina,
+     *  este reemplaza a setFormato */
+    boolean validarFormato(TorneoFormato formato);
+
     boolean permiteEmpate();
+    String getNombreDisciplina();
+
+    /** Verifica que el MatchResultado ingresado sea coherente a la disciplina */
+    boolean validarMatchResultado(MatchResultado resultado);
+
+    /** Ordena los criterios de la disciplina dependiendo de su importancia */
+    ArrayList<CriterioDesempate> ordenCriteriosDesempate();
 }
