@@ -26,7 +26,7 @@ public class MatchResultado {
      * @param puntaje2
      * @return el resultado dependiendo los puntajes ingresados
      */
-    public DeterminarGanador sacarOutcome(double puntaje1, double puntaje2){
+    public DeterminarGanador setDeterminarGanador(double puntaje1, double puntaje2){
         if (puntaje1 > puntaje2) return DeterminarGanador.PARTICIPANTE_UNO_GANA;
         if (puntaje2 > puntaje1) return DeterminarGanador.PARTICIPANTE_DOS_GANA;
         return DeterminarGanador.EMPATE;
@@ -38,5 +38,10 @@ public class MatchResultado {
      */
     public boolean esEmpate(){
         return outcome == DeterminarGanador.EMPATE;
+    }
+
+    /** Getters */
+    public DeterminarGanador getOutcome(){
+        return outcome;
     }
 }

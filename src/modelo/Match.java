@@ -52,6 +52,49 @@ public class Match {
         return resultado != null;
     }
 
+    /**
+     * Getter que retorna el participante ganador del enfrentamiento
+     * @return el participante ganador
+     */
+    public Participante getGanadorMatch(){
+        Participante participanteGanador;
+        if (!tieneResultado()) return null;
+
+        switch (resultado.getOutcome()){
+            case PARTICIPANTE_UNO_GANA: participanteGanador = participanteUno;
+            case PARTICIPANTE_DOS_GANA: participanteGanador = participanteDos;
+            default: participanteGanador = null;
+        }
+        return participanteGanador;
+    }
+
+    /**
+     * Getter que retorna el participante perdedor del enfrentamiento
+     * @return el participante perdedor
+     */
+    public Participante getPerdedorMatch(){
+        Participante participantePerdedor;
+        if (!tieneResultado()) return null;
+
+        switch (resultado.getOutcome()){
+            case PARTICIPANTE_UNO_GANA: participantePerdedor = participanteDos;
+            case PARTICIPANTE_DOS_GANA: participantePerdedor = participanteUno;
+            default: participantePerdedor = null;
+        }
+        return participantePerdedor;
+    }
+
+    public void setResultadoMatch(MatchResultado resultado){
+        if (resultado == null){
+            throw new IllegalArgumentException();
+        }
+
+        if (tieneResultado()){
+            throw new IllegalStateException();
+        }
+        this.resultado = resultado;
+    }
+
     /** Getters */
     public Participante getParticipanteUno(){
         return participanteUno;
