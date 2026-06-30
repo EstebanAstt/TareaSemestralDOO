@@ -43,4 +43,25 @@ public class Match {
         this.posicionBracket = posicionBracket;
         this.fecha = fecha;
     }
+
+    /**
+     * Revisa si el enfrentamiento tiene resultado o no
+     * @return resultado actual del enfrentamiento
+     */
+    public boolean tieneResultado(){
+        return resultado != null;
+    }
+
+    /** Getters */
+    public Participante getParticipanteUno(){
+        return participanteUno;
+    }
+
+    public Participante getParticipanteDos(){
+        return participanteDos;
+    }
+
+    public MatchResultado getResultado(){
+        return resultado;
+    }
 }
