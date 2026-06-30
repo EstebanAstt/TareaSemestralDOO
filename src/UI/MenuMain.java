@@ -3,6 +3,9 @@ package UI;
 
 import UI.Resources.BaseWindow;
 import UI.Resources.ColorPalette;
+import UI.rol.EspectadorStrategy;
+import UI.rol.OrganizadorStrategy;
+import UI.rol.RolStrategy;
 import UI.rol.RolUsuario;
 
 import javax.swing.*;
@@ -86,10 +89,12 @@ public class MenuMain extends BaseWindow {
      */
     private void handleRoleSelection(RolUsuario role) {
         this.selectedRole = role;
-        System.out.println("[LOG] Rol seleccionado: " + role.name());
-        JOptionPane.showMessageDialog(this,
-                "Ingresaste como: " + role.getDisplayName(),
-                "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
+        RolStrategy strategy = (role == RolUsuario.ORGANIZADOR)
+                ? new OrganizadorStrategy()
+                : new EspectadorStrategy();
+
+        new MenuOpciones(strategy).setVisible(true);
+        dispose(); // cierra MenuMain
     }
 
 }
