@@ -1,6 +1,7 @@
 package UI;
 
 
+import UI.Resources.AppWindow;
 import UI.Resources.BaseWindow;
 import UI.Resources.ColorPalette;
 import UI.rol.EspectadorStrategy;
@@ -22,7 +23,7 @@ import java.awt.*;
  * o SpectatorStrategy) que determina qué pantallas y
  * operaciones estarán disponibles en el resto de la sesión.
  */
-public class MenuMain extends BaseWindow {
+public class MenuMainPanel extends BaseWindow {
 
     //tamano y posicion de los botones
     private static final int BTN_WIDTH = 280;
@@ -35,8 +36,9 @@ public class MenuMain extends BaseWindow {
     //rol que elige el usuario antes de ingresar de lleno a la aplicacion, en un principio es null
     private RolUsuario selectedRole = null;
 
-    public MenuMain() {
-        super("Planificador de Torneos");
+    public MenuMainPanel(AppWindow appWindow) {
+        super(appWindow);
+        //super("Planificador de Torneos");
         loadBackgroundImage("MenuSeleccion.png");
         initUI();
     }
@@ -44,12 +46,8 @@ public class MenuMain extends BaseWindow {
     // ── Construcción de la UI ──────────────────────────────────────────
     @Override
     protected void initUI() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 650);
-        setLocationRelativeTo(null); // centrar en pantalla
-        setResizable(false);
 
-        // Panel principal con imagen de fondo pintada manualmente
+        // Panel principal con imagen de fondo personalizada
         JPanel mainPanel = createBackgroundPanel();
         mainPanel.setLayout(new BorderLayout());
 
@@ -57,7 +55,9 @@ public class MenuMain extends BaseWindow {
         JPanel leftPanel = buildLeftPanel();
         mainPanel.add(leftPanel, BorderLayout.WEST);
 
-        setContentPane(mainPanel);
+        //setContentPane(mainPanel);
+        setLayout(new BorderLayout());
+        add(mainPanel, BorderLayout.CENTER);
     }
 
     private JPanel buildLeftPanel() {
@@ -88,13 +88,11 @@ public class MenuMain extends BaseWindow {
      * cada rol instanciará su propia estrategia de acceso.
      */
     private void handleRoleSelection(RolUsuario role) {
-        this.selectedRole = role;
         RolStrategy strategy = (role == RolUsuario.ORGANIZADOR)
                 ? new OrganizadorStrategy()
                 : new EspectadorStrategy();
-
-        new MenuOpciones(strategy).setVisible(true);
-        dispose(); // cierra MenuMain
+        //aca se abre el Menu opciones segun si eres organizador o espectador
+        appWindow.mostrarPanel(new MenuOpcionesPanel(appWindow, strategy));
     }
 
 }
