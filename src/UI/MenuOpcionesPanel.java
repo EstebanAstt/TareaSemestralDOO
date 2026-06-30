@@ -1,16 +1,30 @@
 package UI;
 
+import UI.Resources.AppWindow;
 import UI.Resources.BaseWindow;
 import UI.Resources.ColorPalette;
 import UI.rol.RolStrategy;
 
 import javax.swing.*;
 
-public class MenuOpciones extends BaseWindow {
-    private RolStrategy strategy;
+public class MenuOpcionesPanel extends BaseWindow {
+    private final RolStrategy strategy;
 
-    public MenuOpciones(RolStrategy strategy) {
-        super("Menú Principal");
+    private static final int BTN_WIDTH = 280;
+    private static final int BTN_HEIGHT = 50;
+    private static final int BTN_X = 50;
+    private static final int BTN_Y = 420;
+    private static final int BTN_MARGIN_Y = 80;
+
+
+    private static final int BTN_BACK_WIDTH = 120;
+    private static final int BTN_BACK_HEIGHT = 40;
+    private static final int BTN_BACK_X = 40;
+    private static final int BTN_BACK_Y = 650-90;
+
+
+    public MenuOpcionesPanel(AppWindow appWindow, RolStrategy strategy) {
+        super(appWindow);
         this.strategy = strategy;
         loadBackgroundImage("MenuOpciones" + strategy.getNombreRol() + ".png");
         initUI();
@@ -18,22 +32,12 @@ public class MenuOpciones extends BaseWindow {
 
     @Override
     protected void initUI() {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1100, 650);
-        setLocationRelativeTo(null);
-        setResizable(false);
-
-        // Panel principal con imagen de fondo, posicionamiento absoluto
+        // Panel principal con imagen de fondo
         JPanel mainPanel = createBackgroundPanel();
         mainPanel.setLayout(null);
 
         String[] opciones = strategy.getOpciones();
 
-        // ── Botones centrales (uno por cada opción de la estrategia) ───
-        int btnW = 280, btnH = 55, gap = 20;
-        int totalH = (btnH * opciones.length) + (gap * (opciones.length - 1));
-        int startY = (650 - totalH) / 2;
-        int x = (1100 - btnW) / 2;
 
         for (int i = 0; i < opciones.length; i++) {
             String opcion = opciones[i];
@@ -43,25 +47,23 @@ public class MenuOpciones extends BaseWindow {
                     ColorPalette.COLOR_BTN_HOVER.getColor(),
                     ColorPalette.COLOR_TEXT_DARK.getColor()
             );
-            btn.setBounds(x, startY + i * (btnH + gap), btnW, btnH);
+            btn.setBounds(BTN_X, BTN_Y + BTN_MARGIN_Y*i, BTN_WIDTH, BTN_HEIGHT);
             btn.addActionListener(e -> strategy.ejecutarOpcion(opcion, this));
             mainPanel.add(btn);
         }
 
-        // ── Botón Volver (esquina inferior izquierda) ──────────────────
+        // ── Botón Volver (esquina inferior izquierda)
         JButton btnVolver = buildButton(
-                "← Volver",
+                "Volver",
                 ColorPalette.COLOR_BTN_BACK.getColor(),
                 ColorPalette.COLOR_BTN_BACK_HOVER.getColor(),
                 ColorPalette.COLOR_TEXT_LIGHT.getColor()
         );
-        btnVolver.setBounds(40, 650 - 90, 160, 45);
-        btnVolver.addActionListener(e -> {
-            dispose();
-            new MenuMain().setVisible(true);
-        });
+        btnVolver.setBounds(BTN_BACK_X, BTN_BACK_Y, BTN_BACK_WIDTH, BTN_BACK_HEIGHT);
+        btnVolver.addActionListener(e -> appWindow.mostrarPanel(new MenuMainPanel(appWindow)));
         mainPanel.add(btnVolver);
 
-        setContentPane(mainPanel);
+        setLayout(new java.awt.BorderLayout());
+        add(mainPanel, java.awt.BorderLayout.CENTER);
     }
 }
