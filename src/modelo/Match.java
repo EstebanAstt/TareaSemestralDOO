@@ -84,6 +84,10 @@ public class Match {
         return participantePerdedor;
     }
 
+    /**
+     * Setter el cual ingresa el resultado una única vez
+     * @param resultado variable MatchResultado ingresado
+     */
     public void setResultadoMatch(MatchResultado resultado){
         if (resultado == null){
             throw new IllegalArgumentException();

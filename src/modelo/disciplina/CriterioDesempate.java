@@ -1,6 +1,9 @@
 package modelo.disciplina;
 
+/** Enum encargado de definir cada criterio de desempate
+ *  Permite que cada disciplina tenga sus propios criterios */
 public enum CriterioDesempate {
+
     /** Puntos totales acumulados */
     PUNTOS,
 
