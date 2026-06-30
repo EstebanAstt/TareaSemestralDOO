@@ -1,12 +1,12 @@
 package UI;
 
 
+import UI.Resources.BaseWindow;
+import UI.Resources.ColorPalette;
+import UI.rol.RolUsuario;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.util.Objects;
 
 /**
  * Ventana principal de inicio del sistema de torneos.
@@ -20,13 +20,6 @@ import java.util.Objects;
  * operaciones estarán disponibles en el resto de la sesión.
  */
 public class MenuMain extends BaseWindow {
-
-    //paleta de colores (botones y su color cuando se pasa sobre el con el cursor, color del texto de los botones)
-    private static final Color COLOR_BTN_ORG    = new Color(56, 162, 234, 255);
-    private static final Color COLOR_BTN_SPE    = new Color(56, 162, 234, 255);
-    private static final Color COLOR_BTN_HOVER_ORG = new Color(27, 84, 120);
-    private static final Color COLOR_BTN_HOVER_SPE = new Color(27, 84, 120);
-    private static final Color COLOR_TEXT_DARK  = new Color(37, 32, 2, 255);
 
     //tamano y posicion de los botones
     private static final int BTN_WIDTH = 280;
@@ -70,8 +63,8 @@ public class MenuMain extends BaseWindow {
         panel.setOpaque(false);
         panel.setPreferredSize(new Dimension(400, 0));
 
-        JButton btnOrganizador = buildButton("Organizador", COLOR_BTN_ORG, COLOR_BTN_HOVER_ORG, COLOR_TEXT_DARK );
-        JButton btnEspectador = buildButton("Espectador", COLOR_BTN_SPE, COLOR_BTN_HOVER_SPE, COLOR_TEXT_DARK );
+        JButton btnOrganizador = buildButton("Organizador", ColorPalette.COLOR_BTN.getColor(), ColorPalette.COLOR_BTN_HOVER.getColor(), ColorPalette.COLOR_TEXT_DARK.getColor() );
+        JButton btnEspectador = buildButton("Espectador", ColorPalette.COLOR_BTN.getColor(), ColorPalette.COLOR_BTN_HOVER.getColor(), ColorPalette.COLOR_TEXT_DARK.getColor() );
 
 
         btnOrganizador.setBounds(BTN_X, BTN_Y, BTN_WIDTH, BTN_HEIGHT);
