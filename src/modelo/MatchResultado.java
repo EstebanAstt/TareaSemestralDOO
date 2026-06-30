@@ -35,19 +35,19 @@ public class MatchResultado {
     }
 
     /** Lista de sets para tenis */
-    private ArrayList<SetTenis> setsTenisIngresados;
+    private ArrayList<SetTenis> setsTenis;
 
     /**
      * Constructor para Tenis
-     * @param setsTenisIngresados lista de sets de tenis
+     * @param setsTenis lista de sets de tenis
      */
-    public MatchResultado(ArrayList<SetTenis> setsTenisIngresados){
+    public MatchResultado(ArrayList<SetTenis> setsTenis){
 
         /** Un partido de tenis debe tener por lo mínimo 2 resultados */
-        if (setsTenisIngresados == null || setsTenisIngresados.size() < 2){
+        if (setsTenis == null || setsTenis.size() < 2){
             throw new IllegalArgumentException();
         }
-        this.setsTenisIngresados = setsTenisIngresados;
+        this.setsTenis = setsTenis;
 
         /** A diferencia de determinar los puntajes al crear un enfrentamiento,
          *  en el tenis se saca automáticamente dependiendo del ganador de
@@ -55,9 +55,8 @@ public class MatchResultado {
         int puntajeUno = 0;
         int puntajeDos = 0;
 
-        for (int s = 0; s < setsTenisIngresados.size(); s++){
-            SetTenis setActual = setsTenisIngresados.get(s);
-
+        for (int s = 0; s < setsTenis.size(); s++){
+            SetTenis setActual = setsTenis.get(s);
             if (setActual.determinarGanadorTenis() == DeterminarGanador.PARTICIPANTE_UNO_GANA){
                 puntajeUno++;
             }
@@ -73,7 +72,7 @@ public class MatchResultado {
      * @param puntajeUno puntaje del primer participante
      * @param puntajeDos puntake del segundo participante
      */
-    private void validarPuntajesAjedrez(double puntajeUno, double puntajeDos){
+    public void validarPuntajesAjedrez(double puntajeUno, double puntajeDos){
         boolean puntajeUnoValido = puntajeUno == 0.0 || puntajeUno == 0.5
                 || puntajeUno == 1.0;
         boolean puntajeDosValido = puntajeDos == 0.0 || puntajeDos == 0.5
@@ -119,5 +118,9 @@ public class MatchResultado {
 
     public double getPuntajeDos() {
         return puntajeDos;
+    }
+
+    public ArrayList<SetTenis> getSetsTenis(){
+        return setsTenis;
     }
 }
