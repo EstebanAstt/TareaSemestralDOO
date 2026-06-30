@@ -14,8 +14,8 @@ public class MatchResultado {
 
     /**
      * Determina un ganador empate dependiendo de los puntajes ingresados
-     * @param puntaje1
-     * @param puntaje2
+     * @param puntaje1 puntaje del primer participante
+     * @param puntaje2 puntaje del segundo participante
      * @return el resultado dependiendo los puntajes ingresados
      */
     public DeterminarGanador setDeterminarGanador(double puntaje1, double puntaje2){
@@ -68,6 +68,11 @@ public class MatchResultado {
         this.outcome = setDeterminarGanador(puntajeUno, puntajeDos);
     }
 
+    /**
+     * Verifica que los puntajes sean válidos al tener un enfrentamiento de ajedrez
+     * @param puntajeUno puntaje del primer participante
+     * @param puntajeDos puntake del segundo participante
+     */
     private void validarPuntajesAjedrez(double puntajeUno, double puntajeDos){
         boolean puntajeUnoValido = puntajeUno == 0.0 || puntajeUno == 0.5
                 || puntajeUno == 1.0;
@@ -90,7 +95,6 @@ public class MatchResultado {
         if (!esAjedrez) {
             validarPuntajesAjedrez(puntajeUno, puntajeDos);
         }
-
         this.puntajeUno = puntajeUno;
         this.puntajeDos = puntajeDos;
         this.outcome = setDeterminarGanador(puntajeUno, puntajeDos);
@@ -107,5 +111,13 @@ public class MatchResultado {
     /** Getters */
     public DeterminarGanador getOutcome(){
         return outcome;
+    }
+
+    public double getPuntajeUno() {
+        return puntajeUno;
+    }
+
+    public double getPuntajeDos() {
+        return puntajeDos;
     }
 }
