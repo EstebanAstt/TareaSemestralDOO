@@ -26,17 +26,15 @@ public class Match {
     public Match(Participante participanteUno, Participante participanteDos,
                  int ronda, int posicionBracket, LocalDateTime fecha){
 
-        /** Desde aquí se lanzan excepciones */
         if (participanteUno == null || participanteDos == null){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Ningún participante puede ser nulo");
         }
         if (participanteUno.equals(participanteDos)){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Los participantes deben ser distintos");
         }
         if (ronda < 1){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Debe existir por lo menos una ronda");
         }
-
         this.participanteUno = participanteUno;
         this.participanteDos = participanteDos;
         this.ronda = ronda;
@@ -90,11 +88,10 @@ public class Match {
      */
     public void setResultadoMatch(MatchResultado resultado){
         if (resultado == null){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("El resultado no puede ser nulo");
         }
-
         if (tieneResultado()){
-            throw new IllegalStateException();
+            throw new IllegalStateException("Ya hay existe un resultado");
         }
         this.resultado = resultado;
     }

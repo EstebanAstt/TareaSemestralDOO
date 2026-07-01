@@ -13,8 +13,7 @@ public class Basket implements Disciplina {
 
     @Override
     public double puntajeEmpate(){
-        /** Basket no permite empates */
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Esta disciplina no permite empates");
     }
 
     @Override

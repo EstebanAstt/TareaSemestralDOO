@@ -18,8 +18,7 @@ public class Tenis implements Disciplina {
 
     @Override
     public double puntajeEmpate(){
-        /** Tenis no permite empates */
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Esta disciplina no permite empates");
     }
 
     @Override

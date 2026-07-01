@@ -7,17 +7,17 @@ import java.util.ArrayList;
 public class Carrera implements Disciplina {
     @Override
     public double puntajeVictoria(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Esta disciplina no tiene puntajes");
     }
 
     @Override
     public double puntajeEmpate(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Esta disciplina no tiene puntajes");
     }
 
     @Override
     public double puntajePerdida(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Esta disciplina no tiene puntajes");
     }
 
     @Override
@@ -39,7 +39,8 @@ public class Carrera implements Disciplina {
     @Override
     public boolean validarMatchResultado(MatchResultado resultado){
         /** Los resultados no se registran como MatchResultado
-         *  en cambio, se registran los tiempos de llegada */
+         *  A diferencia de recibir resultados enteros o flotantes,
+         *  se toma en cuenta el tiempo cronometrado de cada participante */
         return false;
     }
 

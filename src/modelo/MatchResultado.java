@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 public class MatchResultado {
 
-    /** Futbol y basket tienen puntajes enteros
-     *  Ajedrez tiene puntajes flotantes */
+    /** Puntajes de tipo double que deben ser enteros en fútbol y basket */
     private double puntajeUno;
     private double puntajeDos;
+
+    /** Lista de sets para tenis */
+    private ArrayList<SetTenis> setsTenis;
 
     /** Enum para ver si existe un ganador o empate */
     private DeterminarGanador outcome;
@@ -30,22 +32,20 @@ public class MatchResultado {
         this.puntajeDos = (double)puntajeDos;
 
         if (puntajeUno < 0 || puntajeDos < 0){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Los puntajes no pueden ser negativos");
         }
     }
-
-    /** Lista de sets para tenis */
-    private ArrayList<SetTenis> setsTenis;
 
     /**
      * Constructor para Tenis
      * @param setsTenis lista de sets de tenis
      */
     public MatchResultado(ArrayList<SetTenis> setsTenis){
-
-        /** Un partido de tenis debe tener por lo mínimo 2 resultados */
-        if (setsTenis == null || setsTenis.size() < 2){
-            throw new IllegalArgumentException();
+        if (setsTenis.size() < 2){
+            throw new IllegalArgumentException("Un partido de tenis debe tener por lo mínimo 2 resultados");
+        }
+        if (setsTenis == null){
+            throw new IllegalArgumentException("Los sets de tenis no pueden ser nulos");
         }
         this.setsTenis = setsTenis;
 
@@ -80,12 +80,12 @@ public class MatchResultado {
 
         /** Los puntajes deben ser válidos */
         if (!puntajeUnoValido || !puntajeDosValido){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Los puntajes deben ser válidos");
         }
 
         /** Al sumar los dos puntajes, no deben sobrepasar 1.0 */
         if (Double.compare(puntajeUno + puntajeDos, 1.0) != 0){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("La suma de los puntajes no puede ser mayor a 1.0");
         }
     }
 
