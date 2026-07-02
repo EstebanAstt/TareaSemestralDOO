@@ -27,4 +27,21 @@ public class Torneo {
         this.formato = formato;
         this.fechaInicio = fechaInicio;
     }
+
+    /** Getters */
+    public String getNombreTorneo(){
+        return nombre;
+    }
+
+    public Disciplina getDisciplinaTorneo(){
+        return disciplina;
+    }
+
+    public TorneoFormato getFormatoTorneo(){
+        return formato;
+    }
+
+    public LocalDate getFechaInicioTorneo(){
+        return fechaInicio;
+    }
 }
