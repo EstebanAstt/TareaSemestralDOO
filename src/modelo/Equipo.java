@@ -40,11 +40,17 @@ public class Equipo extends Participante implements Serializable {
         jugadores.remove(jugador);
     }
 
+    /** Getters */
     public List<Jugador> getJugadores() {
         return Collections.unmodifiableList(jugadores);
     }
 
     public int getEquipoSize() {
         return jugadores.size();
+    }
+
+    /** Hasta ahora se puede quitar un jugador ingresado a partir de su índice */
+    public Jugador getJugadorIndividual(int indexJugador){
+        return jugadores.get(indexJugador);
     }
 }
