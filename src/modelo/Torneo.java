@@ -55,6 +55,16 @@ public class Torneo {
         listaParticipantes.add(participante);
     }
 
+    public void eliminarParticipanteIndividual(Participante participante){
+        if (estado == EstadoTorneo.TORNEO_EN_PROCESO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que ya está en proceso");
+        }
+        if (estado == EstadoTorneo.TORNEO_FINALIZADO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que finalizó");
+        }
+        listaParticipantes.remove(participante);
+    }
+
     /** Getters */
     public String getNombreTorneo(){
         return nombre;
@@ -78,5 +88,14 @@ public class Torneo {
 
     public ArrayList<Match> getMatches(){
         return listaMatches;
+    }
+
+    /** toString preliminar */
+    @Override
+    public String toString(){
+        String stringTorneo = new String("Nombre del Torneo: " + getNombreTorneo() +
+                "\nDisciplina: " + getDisciplinaTorneo() + "\nFormato: " + getFormatoTorneo() +
+                "\nFecha de Inicio: " + getFechaInicioTorneo());
+        return stringTorneo;
     }
 }
