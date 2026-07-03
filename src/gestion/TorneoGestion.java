@@ -10,8 +10,7 @@ public class TorneoGestion {
 
     public TorneoGestion(){
     }
-
-    /** Crea un torneo */
+    
     public Torneo crearTorneo(String nombre, Disciplina disciplina,
                               TorneoFormato formato, LocalDate fechaInicio){
         try {
@@ -40,5 +39,6 @@ public class TorneoGestion {
     }
     */
 
-    /** Aquí luego se crean métodos que replican las opciones del organizador*/
+    /** Aquí luego se crean métodos que replican las opciones del organizador
+     *  Primero desarrollar la clase Torneo */
 }

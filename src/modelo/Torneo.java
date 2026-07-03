@@ -15,6 +15,14 @@ public class Torneo {
     private TorneoFormato formato;
     private LocalDate fechaInicio;
 
+    /** Variables locales de participantes (jugadores y equipos)
+     *  y de matches de un torneo */
+    private ArrayList<Participante> participantes;
+    private ArrayList<Match> matches;
+
+    /** Variable enum para describir el estado actual del torneo */
+    private EstadoTorneo estado;
+
     public Torneo(String nombre, Disciplina disciplina, TorneoFormato formato, LocalDate fechaInicio){
         if (nombre == null || nombre.isBlank()){
             throw new IllegalArgumentException("El torneo debe tener un nombre");
@@ -26,6 +34,9 @@ public class Torneo {
         this.disciplina = disciplina;
         this.formato = formato;
         this.fechaInicio = fechaInicio;
+        this.participantes = new ArrayList<>();
+        this.matches = new ArrayList<>();
+        this.estado = EstadoTorneo.TORNEO_CREADO;
     }
 
     /** Getters */
@@ -43,5 +54,13 @@ public class Torneo {
 
     public LocalDate getFechaInicioTorneo(){
         return fechaInicio;
+    }
+
+    public ArrayList<Participante> getParticipantes(){
+        return participantes;
+    }
+
+    public ArrayList<Match> getMatches(){
+        return matches;
     }
 }
