@@ -16,9 +16,10 @@ public class Torneo {
     private LocalDate fechaInicio;
 
     /** Variables locales de participantes (jugadores y equipos)
-     *  y de matches de un torneo */
-    private ArrayList<Participante> participantes;
-    private ArrayList<Match> matches;
+     *  y de matches de un torneo
+     *  listaParticipantes incluye a jugadores como a equipos */
+    private ArrayList<Participante> listaParticipantes;
+    private ArrayList<Match> listaMatches;
 
     /** Variable enum para describir el estado actual del torneo */
     private EstadoTorneo estado;
@@ -34,9 +35,24 @@ public class Torneo {
         this.disciplina = disciplina;
         this.formato = formato;
         this.fechaInicio = fechaInicio;
-        this.participantes = new ArrayList<>();
-        this.matches = new ArrayList<>();
+        this.listaParticipantes = new ArrayList<>();
+        this.listaMatches = new ArrayList<>();
         this.estado = EstadoTorneo.TORNEO_CREADO;
+    }
+
+    /** Métodos de organizador, estos se verán referenciados en TorneoGestion */
+
+    public void inscribirParticipanteIndividual(Participante participante){
+        if (estado == EstadoTorneo.TORNEO_EN_PROCESO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que ya está en proceso");
+        }
+        if (estado == EstadoTorneo.TORNEO_FINALIZADO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que finalizó");
+        }
+        if (listaParticipantes.contains(participante)){
+            throw new IllegalArgumentException("Este participante ya está en el torneo");
+        }
+        listaParticipantes.add(participante);
     }
 
     /** Getters */
@@ -57,10 +73,10 @@ public class Torneo {
     }
 
     public ArrayList<Participante> getParticipantes(){
-        return participantes;
+        return listaParticipantes;
     }
 
     public ArrayList<Match> getMatches(){
-        return matches;
+        return listaMatches;
     }
 }
