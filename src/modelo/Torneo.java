@@ -15,6 +15,15 @@ public class Torneo {
     private TorneoFormato formato;
     private LocalDate fechaInicio;
 
+    /** Variables locales de participantes (jugadores y equipos)
+     *  y de matches de un torneo
+     *  listaParticipantes incluye a jugadores como a equipos */
+    private ArrayList<Participante> listaParticipantes;
+    private ArrayList<Match> listaMatches;
+
+    /** Variable enum para describir el estado actual del torneo */
+    private EstadoTorneo estado;
+
     public Torneo(String nombre, Disciplina disciplina, TorneoFormato formato, LocalDate fechaInicio){
         if (nombre == null || nombre.isBlank()){
             throw new IllegalArgumentException("El torneo debe tener un nombre");
@@ -26,6 +35,34 @@ public class Torneo {
         this.disciplina = disciplina;
         this.formato = formato;
         this.fechaInicio = fechaInicio;
+        this.listaParticipantes = new ArrayList<>();
+        this.listaMatches = new ArrayList<>();
+        this.estado = EstadoTorneo.TORNEO_CREADO;
+    }
+
+    /** Métodos de organizador, estos se verán referenciados en TorneoGestion */
+
+    public void inscribirParticipanteIndividual(Participante participante){
+        if (estado == EstadoTorneo.TORNEO_EN_PROCESO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que ya está en proceso");
+        }
+        if (estado == EstadoTorneo.TORNEO_FINALIZADO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que finalizó");
+        }
+        if (listaParticipantes.contains(participante)){
+            throw new IllegalArgumentException("Este participante ya está en el torneo");
+        }
+        listaParticipantes.add(participante);
+    }
+
+    public void eliminarParticipanteIndividual(Participante participante){
+        if (estado == EstadoTorneo.TORNEO_EN_PROCESO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que ya está en proceso");
+        }
+        if (estado == EstadoTorneo.TORNEO_FINALIZADO){
+            throw new IllegalStateException("No se puede inscribir a un torneo que finalizó");
+        }
+        listaParticipantes.remove(participante);
     }
 
     /** Getters */
@@ -43,5 +80,22 @@ public class Torneo {
 
     public LocalDate getFechaInicioTorneo(){
         return fechaInicio;
+    }
+
+    public ArrayList<Participante> getParticipantes(){
+        return listaParticipantes;
+    }
+
+    public ArrayList<Match> getMatches(){
+        return listaMatches;
+    }
+
+    /** toString preliminar */
+    @Override
+    public String toString(){
+        String stringTorneo = new String("Nombre del Torneo: " + getNombreTorneo() +
+                "\nDisciplina: " + getDisciplinaTorneo() + "\nFormato: " + getFormatoTorneo() +
+                "\nFecha de Inicio: " + getFechaInicioTorneo());
+        return stringTorneo;
     }
 }

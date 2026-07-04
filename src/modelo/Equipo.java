@@ -14,7 +14,7 @@ public class Equipo extends Participante implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private List<Jugador> jugadores;
+    private List<Participante> jugadores;
 
     public Equipo(String name, String contact) {
         super(name, contact);
@@ -27,21 +27,21 @@ public class Equipo extends Participante implements Serializable {
     }
 
     /**
-     * Añade un jugador al equipo.
+     * Añade un jugador (participante) al equipo.
      */
-    public void addjugador(Jugador jugador) {
+    public void addjugador(Participante jugador) {
         if (jugador == null) throw new IllegalArgumentException("El jugador no puede ser null.");
         if (!jugadores.contains(jugador)) {
             jugadores.add(jugador);
         }
     }
 
-    public void removePlayer(Jugador jugador) {
+    public void removePlayer(Participante jugador) {
         jugadores.remove(jugador);
     }
 
     /** Getters */
-    public List<Jugador> getJugadores() {
+    public List<Participante> getJugadores() {
         return Collections.unmodifiableList(jugadores);
     }
 
@@ -50,7 +50,7 @@ public class Equipo extends Participante implements Serializable {
     }
 
     /** Hasta ahora se puede quitar un jugador ingresado a partir de su índice */
-    public Jugador getJugadorIndividual(int indexJugador){
+    public Participante getJugadorIndividual(int indexJugador){
         return jugadores.get(indexJugador);
     }
 }
