@@ -3,6 +3,7 @@ package UI;
 import UI.Resources.AppWindow;
 import UI.Resources.BaseWindow;
 import UI.Resources.ColorPalette;
+import gestion.TorneoGestion;
 import modelo.Equipo;
 import modelo.Jugador;
 import modelo.Participante;
@@ -438,7 +439,12 @@ public class CrearTorneoPanel extends BaseWindow {
             DisciplinaEnum disc    = DisciplinaEnum.values()[disciplinaIdx];
             FormatoEnum    formato = FormatoEnum.desdeNombre(disc.getFormatos()[formatoIdx]);
 
-            Torneo torneo = new Torneo(nombre, disc.crearDisciplina(), formato.crearFormato(), fecha);
+            TorneoGestion gestion = new TorneoGestion();
+            Torneo torneo = gestion.crearTorneo(nombre, disc.crearDisciplina(), formato.crearFormato(), fecha);
+            participantes.forEach(p -> {
+                if (p instanceof Equipo eq) gestion.inscribirEquipoGestion(eq);
+                else                        gestion.inscribirParticipanteGestion(p);
+            });
             // TODO: torneo.addParticipantes(participantes);
 
             JOptionPane.showMessageDialog(this,
