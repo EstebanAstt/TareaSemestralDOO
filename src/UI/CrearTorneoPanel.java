@@ -508,7 +508,7 @@ public class CrearTorneoPanel extends BaseWindow {
         btnEliminar.addActionListener(e -> {
             int idx = listaJugadores.getSelectedIndex();
             if (idx >= 0) {
-                Jugador jugador = equipo.getJugadores().get(idx);
+                Participante jugador = equipo.getJugadores().get(idx);
                 equipo.removePlayer(jugador);
                 jugadoresModel.remove(idx);
                 listModel.set(idxEquipo,
