@@ -1,13 +1,22 @@
 package UI.rol;
 
+import UI.CrearTorneoPanel;
+import UI.Resources.AppWindow;
+
 import javax.swing.*;
 
 public class OrganizadorStrategy implements RolStrategy {
+
+    private final AppWindow appWindow;
+    public OrganizadorStrategy(AppWindow appWindow) {
+        this.appWindow = appWindow;
+    }
+
     @Override
     public String[] getOpciones() {
         return new String[] {
                 "Ver Torneos",
-                "Crear Torneos"
+                "Crear Torneo"
         };
     }
 
@@ -15,6 +24,7 @@ public class OrganizadorStrategy implements RolStrategy {
     public void ejecutarOpcion(String opcion, JPanel panelActual) {
         switch (opcion) {
             case "Crear Torneo" -> {
+                appWindow.mostrarPanel(new CrearTorneoPanel(appWindow));
                 // new CrearTorneo().setVisible(true);
                 System.out.println("[LOG] Abrir: Crear Torneo");
             }
