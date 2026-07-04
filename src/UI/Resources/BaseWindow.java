@@ -168,6 +168,82 @@ public abstract class BaseWindow extends JPanel {
 
         return panel;
     }
+
+    /**
+     * Grupo de botones de selección única (como radio buttons pero con estilo propio).
+     * Al seleccionar uno, los demás se deseleccionan automáticamente.
+     *
+     * @param opciones      etiquetas de cada opción
+     * @param onSelect      qué hacer cuando se selecciona una opción (recibe el índice)
+     * @return panel con los botones ya agrupados
+     */
+    protected JPanel buildOptionGroup(String[] opciones, Consumer<Integer> onSelect) {
+
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        panel.setOpaque(false);
+
+        boolean[] activos = new boolean[opciones.length]; // estado compartido
+
+        JButton[] botones = new JButton[opciones.length];
+
+        for (int i = 0; i < opciones.length; i++) {
+            final int idx = i;
+            final String texto = opciones[i];
+
+            JButton btn = new JButton() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                            RenderingHints.VALUE_ANTIALIAS_ON);
+
+                    Color bg;
+                    if (activos[idx])                    bg = ColorPalette.COLOR_BTN.getColor();
+                    else if (getModel().isRollover())    bg = ColorPalette.COLOR_BTN_HOVER.getColor();
+                    else                                 bg = ColorPalette.COLOR_BTN_DEACTIVATED.getColor();
+
+                    g2.setColor(bg);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+
+                    if (activos[idx]) {
+                        g2.setColor(ColorPalette.COLOR_BTN.getColor().darker());
+                        g2.setStroke(new BasicStroke(2f));
+                        g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 12, 12);
+                    }
+
+                    g2.setColor(activos[idx] ? ColorPalette.COLOR_TEXT_LIGHT.getColor() : ColorPalette.COLOR_TEXT_DARK.getColor());
+                    g2.setFont(new Font("SansSerif", Font.BOLD, 14));
+                    FontMetrics fm = g2.getFontMetrics();
+                    g2.drawString(texto,
+                            (getWidth()  - fm.stringWidth(texto)) / 2,
+                            (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
+
+                    g2.dispose();
+                }
+            };
+
+            btn.setContentAreaFilled(false);
+            btn.setBorderPainted(false);
+            btn.setFocusPainted(false);
+            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btn.setPreferredSize(new Dimension(130, 40));
+
+            btn.addActionListener(e -> {
+                // Limpiar todos, activar solo el ultimo seleccionado ( o el primer seleccionado)
+                for (int j = 0; j < activos.length; j++) activos[j] = false;
+                activos[idx] = true;
+                // Repintar todos para que reflejen el cambio
+                for (JButton b : botones) b.repaint();
+
+                if (onSelect != null) onSelect.accept(idx);
+            });
+
+            botones[i] = btn;
+            panel.add(btn);
+        }
+
+        return panel;
+    }
     // Cada ventana construye su propio metodo de inicializacion
     protected abstract void initUI();
 }
