@@ -89,7 +89,7 @@ public class MenuMainPanel extends BaseWindow {
      */
     private void handleRoleSelection(RolUsuario role) {
         RolStrategy strategy = (role == RolUsuario.ORGANIZADOR)
-                ? new OrganizadorStrategy()
+                ? new OrganizadorStrategy(appWindow)
                 : new EspectadorStrategy();
         //aca se abre el Menu opciones segun si eres organizador o espectador
         appWindow.mostrarPanel(new MenuOpcionesPanel(appWindow, strategy));
