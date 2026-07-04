@@ -244,6 +244,34 @@ public abstract class BaseWindow extends JPanel {
 
         return panel;
     }
+    protected JLabel buildTitulo(String texto) {
+        JLabel lbl = new JLabel(texto);
+        lbl.setFont(new Font("SansSerif", Font.BOLD, 28));
+        lbl.setForeground(new Color(30, 30, 30));
+        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return lbl;
+    }
+
+    protected JLabel buildEtiqueta(String texto) {
+        JLabel lbl = new JLabel(texto);
+        lbl.setFont(new Font("SansSerif", Font.BOLD, 14));
+        lbl.setForeground(new Color(50, 50, 50));
+        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return lbl;
+    }
+
+    protected JTextField buildCampoTexto(String placeholder) {
+        JTextField campo = new JTextField();
+        campo.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        campo.putClientProperty("JTextField.placeholderText", placeholder);
+        campo.setMaximumSize(new Dimension(500, 36));
+        campo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(180, 180, 180)),
+                BorderFactory.createEmptyBorder(4, 8, 4, 8)
+        ));
+        return campo;
+    }
     // Cada ventana construye su propio metodo de inicializacion
     protected abstract void initUI();
 }
