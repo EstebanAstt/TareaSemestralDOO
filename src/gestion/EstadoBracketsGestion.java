@@ -8,9 +8,9 @@ import modelo.Match;
  * dependiendo del formato del Torneo (Liga, Ida y Vuelta y Partido Único)
  */
 public interface EstadoBracketsGestion {
-    /** Avisa cuando se generó un bracket inicial */
+    /** Avisa cuando se generó o regeneró un bracket inicial */
     void onBracketGenerado(ArrayList<Match> partidos);
 
-    /** Avisa cuando se actualiza un bracket a partir de un match */
-    void onBracketActualizado(Match partido);
+    /** Avisa cuando se actualiza un match en específico */
+    void onMatchActualizado(Match partido);
 }

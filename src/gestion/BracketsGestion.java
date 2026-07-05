@@ -36,4 +36,18 @@ public class BracketsGestion {
     public void eliminarObservadorBracket(EstadoBracketsGestion observador){
         observadoresBracket.remove(observador);
     }
+
+    public void notificarBracketGenerado(){
+
+        // El ciclo for representa "por observador local en observadoresBracket"
+        for (EstadoBracketsGestion observadorLocal : observadoresBracket){
+            observadorLocal.onBracketGenerado(partidos);
+        }
+    }
+
+    public void notificarMatchActualizado(Match partido){
+        for (EstadoBracketsGestion observadorLocal : observadoresBracket){
+            observadorLocal.onMatchActualizado(partido);
+        }
+    }
 }
