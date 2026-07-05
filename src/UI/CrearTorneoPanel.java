@@ -3,6 +3,7 @@ package UI;
 import UI.Resources.AppWindow;
 import UI.Resources.BaseWindow;
 import UI.Resources.ColorPalette;
+import gestion.ParticipanteLoader;
 import gestion.TorneoGestion;
 import modelo.Equipo;
 import modelo.Jugador;
@@ -22,20 +23,25 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CrearTorneoPanel es la interfaz exclusiva del Organizador que sirve para crear los torneos,
+ * el Organizador puede Ponerle nombre al torneo, Elegir la disciplina y formato, la fecha de
+ * inicio y participantes.
+ */
 public class CrearTorneoPanel extends BaseWindow {
 
-    // ── Estado interno ─────────────────────────────────────────────────
+    // Estado interno
     private int disciplinaIdx  = -1;
     private int formatoIdx     = -1;
     private boolean usaEquipos = true;
     private final List<Participante> participantes = new ArrayList<>();
 
-    // ── Componentes dinámicos ──────────────────────────────────────────
+    // Componentes dinamicos, cambian segun la disciplina escogida
     private JPanel panelFormatos;
     private DefaultListModel<String> listModel;
     private JLabel labelTipoParticipante;
 
-    // ── Campos de texto ────────────────────────────────────────────────
+    // Campos de texto, donde se escriben el Nombre y la fecha inicial del torneo
     private JTextField campoNombre;
     private JTextField campoFecha;
 
@@ -65,24 +71,25 @@ public class CrearTorneoPanel extends BaseWindow {
         add(fondo, BorderLayout.CENTER);
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // Formulario principal
-    // ─────────────────────────────────────────────────────────────────
+    /**
+     *
+     * @return la estructura principal del formulario para crear un nuevo torneo
+     */
     private JPanel buildFormulario() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
         panel.setBorder(new EmptyBorder(30, 60, 20, 60));
-
+        //Titulo de la interfaz
         panel.add(buildTitulo("Crear Torneo"));
         panel.add(Box.createVerticalStrut(24));
-
+        //Campo donde se añade el nombre del Torneo
         panel.add(buildEtiqueta("Nombre del torneo"));
         panel.add(Box.createVerticalStrut(6));
         campoNombre = buildCampoTexto("Ej: Liga de Verano 2025");
         panel.add(campoNombre);
         panel.add(Box.createVerticalStrut(20));
-
+        //Campo donde se escoge la disciplina del torneo
         panel.add(buildEtiqueta("Disciplina"));
         panel.add(Box.createVerticalStrut(6));
         JPanel grupoDisciplina = buildOptionGroup(DisciplinaEnum.getNombres(), idx -> {
@@ -96,7 +103,7 @@ public class CrearTorneoPanel extends BaseWindow {
         grupoDisciplina.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(grupoDisciplina);
         panel.add(Box.createVerticalStrut(20));
-
+        //Campo donde se indica el formato de la disciplina escogida
         panel.add(buildEtiqueta("Formato"));
         panel.add(Box.createVerticalStrut(6));
         panelFormatos = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
@@ -108,13 +115,13 @@ public class CrearTorneoPanel extends BaseWindow {
         panelFormatos.add(placeholder);
         panel.add(panelFormatos);
         panel.add(Box.createVerticalStrut(20));
-
+        //Campo donde se escoge la fecha inicial para el torneo
         panel.add(buildEtiqueta("Fecha de inicio (dd/mm/aaaa)"));
         panel.add(Box.createVerticalStrut(6));
         campoFecha = buildCampoTexto("Ej: 01/01/2000");
         panel.add(campoFecha);
         panel.add(Box.createVerticalStrut(24));
-
+        //Campo donde se pueden ver los participantes del torneo
         labelTipoParticipante = buildEtiqueta("Participantes");
         panel.add(labelTipoParticipante);
         panel.add(Box.createVerticalStrut(8));
@@ -126,9 +133,10 @@ public class CrearTorneoPanel extends BaseWindow {
         return panel;
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // Sección de participantes
-    // ─────────────────────────────────────────────────────────────────
+    /**
+     *
+     * @return Panel con los botones de Añadir y cargar un archivo txt
+     */
     private JPanel buildBotonesParticipantes() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         panel.setOpaque(false);
@@ -174,8 +182,8 @@ public class CrearTorneoPanel extends BaseWindow {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     int idx = lista.getSelectedIndex();
-                    if (idx >= 0 && participantes.get(idx) instanceof Equipo equipo) {
-                        mostrarDialogoJugadoresEquipo(equipo, idx);
+                    if (validarDisciplinaSeleccionada() && participantes.get(idx) instanceof Equipo equipo) {
+                        Dialogo.mostrarDialogoJugadoresEquipo(CrearTorneoPanel.this, equipo, idx, listModel);
                     }
                 }
             }
@@ -195,7 +203,7 @@ public class CrearTorneoPanel extends BaseWindow {
         btnEliminar.setMaximumSize(new Dimension(220, 34));
         btnEliminar.addActionListener(e -> {
             int idx = lista.getSelectedIndex();
-            if (idx >= 0) {
+            if (validarDisciplinaSeleccionada()) {
                 participantes.remove(idx);
                 listModel.remove(idx);
             }
@@ -206,9 +214,11 @@ public class CrearTorneoPanel extends BaseWindow {
         return panelParticipantes;
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // Barra inferior
-    // ─────────────────────────────────────────────────────────────────
+    /**
+     *
+     * @return Panel inferior de la interfaz, se encuentran los botones para volver y
+     * para crear el torneo
+     */
     private JPanel buildBarraInferior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setOpaque(false);
@@ -240,9 +250,12 @@ public class CrearTorneoPanel extends BaseWindow {
         return barra;
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // Lógica dinámica
-    // ─────────────────────────────────────────────────────────────────
+    /**
+     * aca se almacena la logica dinamica, cuando se elige una disciplina se pueden escoger
+     * ciertos formatos, entonces, se ingresa
+     * @param disc
+     * y segun la disciplina escogida se actualiza el panelFormatos
+     */
     private void actualizarFormatos(DisciplinaEnum disc) {
         panelFormatos.removeAll();
 
@@ -271,120 +284,47 @@ public class CrearTorneoPanel extends BaseWindow {
     // Añadir participante manualmente
     // ─────────────────────────────────────────────────────────────────
     private void mostrarDialogoAnadir() {
-        if (disciplinaIdx < 0) {
-            JOptionPane.showMessageDialog(this,
-                    "Selecciona una disciplina primero.",
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (usaEquipos) mostrarDialogoEquipo();
-        else            mostrarDialogoJugador(null);
-    }
-
-    private void mostrarDialogoEquipo() {
-        JTextField campoNombreEq = new JTextField(20);
-        JTextField campoContacto = new JTextField(20);
-
-        JPanel form = new JPanel(new GridLayout(0, 2, 8, 8));
-        form.add(new JLabel("Nombre del equipo:"));   form.add(campoNombreEq);
-        form.add(new JLabel("Contacto (opcional):")); form.add(campoContacto);
-
-        int res = JOptionPane.showConfirmDialog(this, form,
-                "Añadir Equipo", JOptionPane.OK_CANCEL_OPTION);
-
-        if (res == JOptionPane.OK_OPTION) {
-            String nombre = campoNombreEq.getText().trim();
-            if (nombre.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
-                return;
+        if (!validarDisciplinaSeleccionada()) return;
+        if (usaEquipos) {
+            Equipo eq = Dialogo.mostrarDialogoEquipo(this);
+            if (eq != null) {
+                participantes.add(eq);
+                listModel.addElement(eq.getName());
             }
-            Equipo eq = new Equipo(nombre, campoContacto.getText().trim());
-            participantes.add(eq);
-            listModel.addElement(nombre);
-        }
-    }
-
-    /**
-     *
-     * @param equipoPadre
-     */
-    private void mostrarDialogoJugador(Equipo equipoPadre) {
-        JTextField campoNombreJug = new JTextField(20);
-        JTextField campoContacto  = new JTextField(20);
-
-        JPanel form = new JPanel(new GridLayout(0, 2, 8, 8));
-        form.add(new JLabel("Nombre del jugador:")); form.add(campoNombreJug);
-        form.add(new JLabel("Contacto (opcional):")); form.add(campoContacto);
-
-        int res = JOptionPane.showConfirmDialog(this, form,
-                "Añadir Jugador", JOptionPane.OK_CANCEL_OPTION);
-
-        if (res == JOptionPane.OK_OPTION) {
-            String nombre = campoNombreJug.getText().trim();
-            if (nombre.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
-                return;
-            }
-            Jugador jug = new Jugador(nombre, campoContacto.getText().trim());
-            if (equipoPadre != null) equipoPadre.addjugador(jug);
-            else {
+        } else {
+            Jugador jug = Dialogo.mostrarDialogoJugador(this, null);
+            if (jug != null) {
                 participantes.add(jug);
-                listModel.addElement(nombre);
+                listModel.addElement(jug.getName());
             }
         }
     }
-
     /**
-     * Version preliminar de cargar un equipo o participantes desde un archivo.txt, sirve para
-     * cuando se quiera revisar el estado del programa rapidamente solo se tenga que cargar los
-     * datos, pero la idea es que tambien haya una forma mas manual de carg.ar equipos
+     * Metodo que permite cargar un equipo o participantes desde un archivo.txt, sirve para
+     * cuando se quiera revisar el estado del programa rapidamente (solo se tiene que cargar los
+     * datos)
      */
     private void cargarDesdeArchivo() {
-        if (disciplinaIdx < 0) {
-            JOptionPane.showMessageDialog(this,
-                    "Selecciona una disciplina primero.",
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+        if (!validarDisciplinaSeleccionada()) return;
 
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("Archivos de texto (.txt)", "txt"));
         chooser.setDialogTitle("Seleccionar archivo de participantes");
-
         if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
 
         File archivo = chooser.getSelectedFile();
-        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
-            String primeraLinea = reader.readLine();
-            if (primeraLinea == null) return;
-
+        try {
             if (usaEquipos) {
-                Equipo equipo = new Equipo(primeraLinea.trim());
-                String linea;
-                while ((linea = reader.readLine()) != null) {
-                    if (linea.isBlank()) continue;
-                    String[] partes = linea.split(",", 2);
-                    equipo.addjugador(new Jugador(
-                            partes[0].trim(),
-                            partes.length > 1 ? partes[1].trim() : ""
-                    ));
-                }
+                Equipo equipo = ParticipanteLoader.cargarEquipo(archivo);
                 participantes.add(equipo);
                 listModel.addElement(equipo.getName() + " (" + equipo.getEquipoSize() + " jugadores)");
             } else {
-                String linea = primeraLinea;
-                do {
-                    if (linea.isBlank()) continue;
-                    String[] partes = linea.split(",", 2);
-                    Jugador jug = new Jugador(
-                            partes[0].trim(),
-                            partes.length > 1 ? partes[1].trim() : ""
-                    );
+                List<Jugador> jugadores = ParticipanteLoader.cargarJugadores(archivo);
+                jugadores.forEach(jug -> {
                     participantes.add(jug);
                     listModel.addElement(jug.getName());
-                } while ((linea = reader.readLine()) != null);
+                });
             }
-
             JOptionPane.showMessageDialog(this,
                     "Participantes cargados desde: " + archivo.getName(),
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -406,10 +346,7 @@ public class CrearTorneoPanel extends BaseWindow {
      */
     private void crearTorneo() {
         String nombre = campoNombre.getText().trim();
-        if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El torneo debe tener un nombre.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        if (!validarDisciplinaSeleccionada()) return;
         if (disciplinaIdx < 0) {
             JOptionPane.showMessageDialog(this, "Selecciona una disciplina.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -463,79 +400,19 @@ public class CrearTorneoPanel extends BaseWindow {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    private void mostrarDialogoJugadoresEquipo(Equipo equipo, int idxEquipo) {
-        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
-                "Jugadores de: " + equipo.getName(), true); // true = modal
-        dialog.setSize(400, 450);
-        dialog.setLocationRelativeTo(this);
-        dialog.setLayout(new BorderLayout(10, 10));
 
-        // ── Lista de jugadores del equipo ──────────────────────────────
-        DefaultListModel<String> jugadoresModel = new DefaultListModel<>();
-        equipo.getJugadores().forEach(j -> jugadoresModel.addElement(j.getName()));
-
-        JList<String> listaJugadores = new JList<>(jugadoresModel);
-        listaJugadores.setFont(new Font("SansSerif", Font.PLAIN, 13));
-        listaJugadores.setFixedCellHeight(28);
-
-        JScrollPane scroll = new JScrollPane(listaJugadores);
-        scroll.setBorder(BorderFactory.createTitledBorder("Jugadores"));
-
-        // ── Botones añadir / eliminar ──────────────────────────────────
-        JButton btnAnadir = new JButton("+ Añadir jugador");
-        btnAnadir.addActionListener(e -> {
-            JTextField campoNombre   = new JTextField(15);
-            JTextField campoContacto = new JTextField(15);
-
-            JPanel form = new JPanel(new GridLayout(0, 2, 8, 8));
-            form.add(new JLabel("Nombre:"));            form.add(campoNombre);
-            form.add(new JLabel("Contacto (opcional):")); form.add(campoContacto);
-
-            int res = JOptionPane.showConfirmDialog(dialog, form,
-                    "Añadir Jugador", JOptionPane.OK_CANCEL_OPTION);
-
-            if (res == JOptionPane.OK_OPTION) {
-                String nombre = campoNombre.getText().trim();
-                if (nombre.isEmpty()) {
-                    JOptionPane.showMessageDialog(dialog, "El nombre no puede estar vacío.");
-                    return;
-                }
-                Jugador jug = new Jugador(nombre, campoContacto.getText().trim());
-                equipo.addjugador(jug);
-                jugadoresModel.addElement(nombre);
-                // Actualizar el label del equipo en la lista principal
-                listModel.set(idxEquipo,
-                        equipo.getName() + " (" + equipo.getEquipoSize() + " jugadores)");
-            }
-        });
-
-        JButton btnEliminar = new JButton("X Eliminar seleccionado");
-        btnEliminar.setForeground(Color.RED);
-        btnEliminar.addActionListener(e -> {
-            int idx = listaJugadores.getSelectedIndex();
-            if (idx >= 0) {
-                Participante jugador = equipo.getJugadores().get(idx);
-                equipo.removePlayer(jugador);
-                jugadoresModel.remove(idx);
-                listModel.set(idxEquipo,
-                        equipo.getName() + " (" + equipo.getEquipoSize() + " jugadores)");
-            }
-        });
-
-        JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        botones.add(btnAnadir);
-        botones.add(btnEliminar);
-
-        JButton btnCerrar = new JButton("Cerrar");
-        btnCerrar.addActionListener(e -> dialog.dispose());
-
-        JPanel sur = new JPanel(new BorderLayout());
-        sur.add(botones,   BorderLayout.CENTER);
-        sur.add(btnCerrar, BorderLayout.SOUTH);
-        sur.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-
-        dialog.add(scroll, BorderLayout.CENTER);
-        dialog.add(sur,    BorderLayout.SOUTH);
-        dialog.setVisible(true);
+    /**
+     *
+     * @return variable boolean para verificar que se escogio una disciplina, se debe
+     * preguntar varias veces a si que mejor queda en su metodo void aparte
+     */
+    private boolean validarDisciplinaSeleccionada() {
+        if (disciplinaIdx < 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Selecciona una disciplina primero.",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
     }
 }
