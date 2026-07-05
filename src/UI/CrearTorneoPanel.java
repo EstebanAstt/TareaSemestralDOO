@@ -280,9 +280,10 @@ public class CrearTorneoPanel extends BaseWindow {
         listModel.clear();
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // Añadir participante manualmente
-    // ─────────────────────────────────────────────────────────────────
+    /**
+     * Metodo que permite añadir a un participante con su nombre y contacto, ya sea un
+     * equipo o jugador, tambien es usado para añadir a un jugador en un equipo ya existente
+     */
     private void mostrarDialogoAnadir() {
         if (!validarDisciplinaSeleccionada()) return;
         if (usaEquipos) {
@@ -300,7 +301,7 @@ public class CrearTorneoPanel extends BaseWindow {
         }
     }
     /**
-     * Metodo que permite cargar un equipo o participantes desde un archivo.txt, sirve para
+     * Metodo que permite cargar un equipo o lista de jugadores desde un archivo.txt, sirve para
      * cuando se quiera revisar el estado del programa rapidamente (solo se tiene que cargar los
      * datos)
      */
@@ -403,8 +404,9 @@ public class CrearTorneoPanel extends BaseWindow {
 
     /**
      *
-     * @return variable boolean para verificar que se escogio una disciplina, se debe
-     * preguntar varias veces a si que mejor queda en su metodo void aparte
+     * @return variable boolean para verificar que se escogio una disciplina, se
+     * preguntaba varias veces dentro del codigo a si que mejor queda
+     * en su metodo void aparte
      */
     private boolean validarDisciplinaSeleccionada() {
         if (disciplinaIdx < 0) {
