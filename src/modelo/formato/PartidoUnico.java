@@ -1,7 +1,6 @@
 package modelo.formato;
 
 import java.util.ArrayList;
-
 import gestion.BracketsGestion;
 import modelo.Equipo;
 import modelo.Match;

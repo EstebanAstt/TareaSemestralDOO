@@ -1,11 +1,18 @@
 package modelo.formato;
 
+import java.util.ArrayList;
+import gestion.BracketsGestion;
 import modelo.Equipo;
 import modelo.Match;
 
-import java.util.ArrayList;
-
 public class Liga implements TorneoFormato{
+    private BracketsGestion gestionLiga;
+
+    @Override
+    public void setBracketsGestion(BracketsGestion gestionLiga){
+        this.gestionLiga = gestionLiga;
+    }
+
     @Override
     public int getMinimoParticipantes(){
         return 2;
@@ -43,5 +50,10 @@ public class Liga implements TorneoFormato{
     public int getCantidadMatches(Equipo equipoTorneo){
         int cantidadParticipantes = equipoTorneo.getEquipoSize();
         return cantidadParticipantes * (cantidadParticipantes - 1) / 2;
+    }
+
+    @Override
+    public void actualizarBracket(Match match, BracketsGestion bracketsGestion){
+        bracketsGestion.notificarMatchActualizado(match);
     }
 }
