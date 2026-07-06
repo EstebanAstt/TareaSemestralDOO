@@ -1,10 +1,13 @@
 package UI.Resources;
 
 import UI.MenuMainPanel;
+import gestion.TorneoGestion;
 
 import javax.swing.*;
 
 public class AppWindow extends JFrame {
+
+    private TorneoGestion torneoActivo;
 
     public AppWindow() {
         super("Planificador de Torneos");
@@ -23,5 +26,14 @@ public class AppWindow extends JFrame {
         setContentPane(nuevoPanel);
         revalidate(); // recalcula el layout
         repaint();    // repinta
+    }
+
+
+    public void setTorneoActivo(TorneoGestion gestion) {
+        this.torneoActivo = gestion;
+    }
+
+    public TorneoGestion getTorneoActivo() {
+        return torneoActivo;
     }
 }
