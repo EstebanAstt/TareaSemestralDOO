@@ -16,7 +16,10 @@ public enum ColorPalette {
     COLOR_TEXT_DARK (new Color(37, 32, 2, 255)),
     COLOR_TEXT_LIGHT(new Color(255, 255, 255, 255)),
 
-    COLOR_BG_LIGHT(new Color(255, 255, 255, 200));
+    COLOR_BG_LIGHT(new Color(255, 255, 255, 200)),
+
+    COLOR_TXT_FIELD(new Color(163, 160, 160, 200));
+
 
     private final Color color;
 
