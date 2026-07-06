@@ -267,7 +267,7 @@ public abstract class BaseWindow extends JPanel {
         campo.setMaximumSize(new Dimension(500, 36));
         campo.setAlignmentX(Component.LEFT_ALIGNMENT);
         campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(180, 180, 180)),
+                BorderFactory.createLineBorder(ColorPalette.COLOR_BG_LIGHT.getColor()),
                 BorderFactory.createEmptyBorder(4, 8, 4, 8)
         ));
         return campo;
