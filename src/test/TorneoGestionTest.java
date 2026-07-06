@@ -33,7 +33,7 @@ class TorneoGestionTest {
         /** Se crea un torneo de ajedrez de prueba, con un formato válido */
         nombre = "Torneo Ajedrez Test";
         disciplina = new Ajedrez();
-        formato = new PartidoUnico();
+        formato = new IdaVuelta();
     }
 
     @Test
@@ -68,9 +68,39 @@ class TorneoGestionTest {
     }
 
     @Test
+    void formatoTorneoInvalido(){
+        TorneoFormato formatoInvalido = new PartidoUnico();
+        Torneo torneoFormatoInvalido = torneoGestion.crearTorneo(nombre,
+                disciplina, formatoInvalido, fechaInicio);
+
+        /** Cambiar esto a que la clase Torneo valide el formato
+         *  en su constructor */
+        assertFalse(torneoFormatoInvalido.getDisciplinaTorneo().validarFormato(formatoInvalido),
+                "El formato ingresado no es válido");
+    }
+
+    @Test
     void verificarTorneoActivoSinTorneo(){
         assertThrows(IllegalStateException.class, () ->
                 torneoGestion.verificarTorneoActivo(),
                 "No hay torneo activo");
+    }
+
+    @Test
+    void inscribirParticipanteGestionSinTorneo(){
+        assertThrows(IllegalStateException.class, () ->
+                torneoGestion.inscribirParticipanteGestion(participante1),
+                "Se inscribió un participante en un torneo que no existe");
+    }
+
+    @Test
+    void inscribirParticipanteGestionTorneoDuplicado(){
+        torneoGestion.crearTorneo("Torneo Ajedrez Nuevo", disciplina,
+                formato, fechaInicio);
+        torneoGestion.inscribirParticipanteGestion(participante1);
+
+        assertThrows(IllegalArgumentException.class, () ->
+            torneoGestion.inscribirParticipanteGestion(participante1),
+                "Se inscribió el mismo participante dos veces");
     }
 }
