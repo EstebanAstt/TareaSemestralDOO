@@ -1,7 +1,11 @@
 package modelo.formato;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import gestion.BracketsGestion;
+import gestion.GeneradorLigaGestion;
+import gestion.JornadaGestion;
 import modelo.Equipo;
 import modelo.Match;
 
@@ -19,26 +23,17 @@ public class Liga implements TorneoFormato{
     }
 
     @Override
-    public ArrayList<Match> generarMatches(Equipo equipoTorneo){
-        ArrayList<Match> matchesLiga = new ArrayList<>();
+    public ArrayList<Match> generarMatches(Equipo equipoTorneo) {
         if (equipoTorneo.getEquipoSize() < getMinimoParticipantes()) {
             throw new IllegalArgumentException("Se necesitan por lo menos 2 jugadores");
         }
+        // Delega al GeneradorLigaGestion
+        List<JornadaGestion> jornadas = GeneradorLigaGestion.generar(equipoTorneo.getJugadores());
 
-        /** Se crea una cantidad de matches equivalentes a la cantidad de equipos
-         *  Esto puede cambiar al agregar otro tipo de liga */
-
-        for (int i = 0; i < equipoTorneo.getEquipoSize(); i++){
-            for (int j = 0; j < equipoTorneo.getEquipoSize(); j++){
-                int rondaLocal = 0;
-
-                Match matchLocal = new Match(equipoTorneo.getJugadorIndividual(i),
-                        equipoTorneo.getJugadorIndividual(j), rondaLocal);
-                matchesLiga.add(matchLocal);
-                rondaLocal++;
-            }
-        }
-        return matchesLiga;
+        // Aplana las jornadas en una lista de matches para BracketsGestion (por el momento)
+        ArrayList<Match> todos = new ArrayList<>();
+        jornadas.forEach(j -> todos.addAll(j.getPartidos()));
+        return todos;
     }
 
     @Override
