@@ -11,6 +11,8 @@ import modelo.Participante;
 import modelo.Torneo;
 import modelo.enums.DisciplinaEnum;
 import modelo.enums.FormatoEnum;
+import modelo.formato.Liga;
+import modelo.formato.TorneoFormato;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -378,24 +380,23 @@ public class CrearTorneoPanel extends BaseWindow {
             FormatoEnum    formato = FormatoEnum.desdeNombre(disc.getFormatos()[formatoIdx]);
 
             TorneoGestion gestion = new TorneoGestion();
-            Torneo torneo = gestion.crearTorneo(nombre, disc.crearDisciplina(), formato.crearFormato(), fecha);
+            gestion.crearTorneo(nombre, disc.crearDisciplina(), formato.crearFormato(), fecha);
             participantes.forEach(p -> {
                 if (p instanceof Equipo eq) gestion.inscribirEquipoGestion(eq);
                 else                        gestion.inscribirParticipanteGestion(p);
             });
-            // TODO: torneo.addParticipantes(participantes);
 
-            JOptionPane.showMessageDialog(this,
-                    "Torneo \"" + nombre + "\" creado exitosamente.\n" +
-                            "Disciplina: "     + disc.getNombre() + "\n" +
-                            "Formato: "        + formato.getNombre() + "\n" +
-                            "Participantes: "  + participantes.size(),
-                    "Torneo creado", JOptionPane.INFORMATION_MESSAGE);
+            // ── Generar el bracket ANTES de abrir el panel ─────────────────
+            TorneoFormato formatoTorneo = gestion.getTorneo().getFormatoTorneo();
 
-            appWindow.mostrarPanel(new MenuOpcionesPanel(
-                    appWindow,
-                    new UI.rol.OrganizadorStrategy(appWindow)
-            ));
+            if (formatoTorneo instanceof Liga) {
+                gestion.generarCalendarioLiga();
+                // TODO: appWindow.mostrarPanel(new LigaVer(appWindow, gestion));
+            } else {
+                gestion.generarBracketEliminatoria(); // esto inicializa bracketsGestion
+                appWindow.setTorneoActivo(gestion);
+                appWindow.mostrarPanel(new BracketVer(appWindow, gestion));
+            }
 
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
