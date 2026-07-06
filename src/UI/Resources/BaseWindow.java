@@ -1,5 +1,7 @@
 package UI.Resources;
 
+import gestion.BracketUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -271,6 +273,32 @@ public abstract class BaseWindow extends JPanel {
                 BorderFactory.createEmptyBorder(4, 8, 4, 8)
         ));
         return campo;
+    }
+
+    protected JButton buildButtonTruncado(String nombre, Color bg, Color hover) {
+        JButton btn = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(getModel().isRollover() ? hover : bg);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+
+                g2.setColor(Color.WHITE);
+                g2.setFont(new Font("SansSerif", Font.BOLD, 13));
+                FontMetrics fm = g2.getFontMetrics();
+                String display = BracketUtils.truncar(nombre, fm, getWidth() - 16);
+                g2.drawString(display, 10, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
+
+                g2.dispose();
+            }
+        };
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return btn;
     }
     // Cada ventana construye su propio metodo de inicializacion
     protected abstract void initUI();

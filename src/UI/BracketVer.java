@@ -16,6 +16,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static gestion.BracketUtils.getNombreFase;
+import static gestion.BracketUtils.truncar;
+
 /**
  * Panel que muestra el bracket de eliminatoria directa.
  *
@@ -29,11 +32,6 @@ import java.util.Map;
  */
 public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGestion {
 
-    // ── Colores específicos del bracket ────────────────────────────────
-    private static final Color COLOR_MATCH       = new Color(30, 100, 140, 255);
-    private static final Color COLOR_MATCH_HOVER = new Color(20,  70, 100, 255);
-    private static final Color COLOR_GANADOR     = new Color(40, 160,  80, 255);
-    private static final Color COLOR_PENDIENTE   = new Color(150, 150, 150, 200);
 
     private final TorneoGestion torneoGestion;
     private final BracketsGestion bracketsGestion;
@@ -185,16 +183,16 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
         Participante p2     = match.getParticipanteDos();
         Participante ganador = match.getGanadorMatch();
 
-        JButton btnP1 = buildBotonParticipante(
+        JButton btnP1 = buildButtonTruncado(
                 p1 != null ? p1.getName() : "BYE",
-                p1 != null && p1.equals(ganador) ? COLOR_GANADOR : COLOR_MATCH,
-                p1 != null && p1.equals(ganador) ? COLOR_GANADOR.darker() : COLOR_MATCH_HOVER
+                p1 != null && p1.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor() : ColorPalette.COLOR_BTN_MATCH.getColor(),
+                p1 != null && p1.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor().darker() : ColorPalette.COLOR_BTN_MATCH_HOVER.getColor()
         );
 
-        JButton btnP2 = buildBotonParticipante(
-                p2 != null ? p2.getName() : "BYE",
-                p2 != null && p2.equals(ganador) ? COLOR_GANADOR : COLOR_MATCH,
-                p2 != null && p2.equals(ganador) ? COLOR_GANADOR.darker() : COLOR_MATCH_HOVER
+        JButton btnP2 = buildButtonTruncado(
+                p2 != null ? p1.getName() : "BYE",
+                p2 != null && p1.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor() : ColorPalette.COLOR_BTN_MATCH.getColor(),
+                p2 != null && p1.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor().darker() : ColorPalette.COLOR_BTN_MATCH_HOVER.getColor()
         );
 
         // Al hacer clic en el par → futuro: registrar resultado
@@ -207,39 +205,6 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
 
         return par;
     }
-
-    /**
-     * Botón individual de participante dentro del bracket.
-     */
-    private JButton buildBotonParticipante(String nombre, Color bg, Color hover) {
-        JButton btn = new JButton() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(getModel().isRollover() ? hover : bg);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-
-                g2.setColor(Color.WHITE);
-                g2.setFont(new Font("SansSerif", Font.BOLD, 13));
-                FontMetrics fm = g2.getFontMetrics();
-                // Truncar nombre si es muy largo
-                String display = truncar(nombre, fm, getWidth() - 16);
-                g2.drawString(display, 10, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
-
-                g2.dispose();
-            }
-        };
-        btn.setPreferredSize(new Dimension(200, 40));
-        btn.setMaximumSize(new Dimension(200, 40));
-        btn.setContentAreaFilled(false);
-        btn.setBorderPainted(false);
-        btn.setFocusPainted(false);
-        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return btn;
-    }
-
     // ─────────────────────────────────────────────────────────────────
     // Barra inferior
     // ─────────────────────────────────────────────────────────────────
@@ -280,11 +245,10 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
                     "Partido pendiente", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
-    // ─────────────────────────────────────────────────────────────────
-    // Implementación de EstadoBracketsGestion (patrón Observer)
-    // ─────────────────────────────────────────────────────────────────
-
+    /**
+     *
+     * @param partidos Aca se implementa EstadoBracketsGestion (Patron Observer)
+     */
     @Override
     public void onBracketGenerado(ArrayList<Match> partidos) {
         SwingUtilities.invokeLater(this::refrescarBracket);
@@ -298,31 +262,5 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
     /** Reconstruye el panel de rondas con los datos actuales. */
     private void refrescarBracket() {
         construirRondas();
-    }
-
-    // ─────────────────────────────────────────────────────────────────
-    // Helpers
-    // ─────────────────────────────────────────────────────────────────
-
-    /** Devuelve el nombre de la fase según la cantidad de partidos en esa ronda. */
-    private String getNombreFase(int cantidadPartidos) {
-        return switch (cantidadPartidos) {
-            case 1  -> "Final";
-            case 2  -> "Semifinal";
-            case 4  -> "Cuartos de Final";
-            case 8  -> "Octavos de Final";
-            case 16 -> "Dieciseisavos";
-            default -> "Ronda de " + (cantidadPartidos * 2);
-        };
-    }
-
-    /** Trunca el texto si no cabe en el ancho disponible del botón. */
-    private String truncar(String texto, FontMetrics fm, int maxAncho) {
-        if (fm.stringWidth(texto) <= maxAncho) return texto;
-        String puntos = "...";
-        while (texto.length() > 0 && fm.stringWidth(texto + puntos) > maxAncho) {
-            texto = texto.substring(0, texto.length() - 1);
-        }
-        return texto + puntos;
     }
 }
