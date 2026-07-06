@@ -106,4 +106,6 @@ public class Match {
     public MatchResultado getResultado(){
         return resultado;
     }
+
+    public int getRonda() { return ronda; }
 }
