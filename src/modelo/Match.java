@@ -59,11 +59,10 @@ public class Match {
         if (!tieneResultado()) return null;
 
         switch (resultado.getOutcome()){
-            case PARTICIPANTE_UNO_GANA: participanteGanador = participanteUno;
-            case PARTICIPANTE_DOS_GANA: participanteGanador = participanteDos;
-            default: participanteGanador = null;
+            case PARTICIPANTE_UNO_GANA -> { return participanteUno; }
+            case PARTICIPANTE_DOS_GANA -> { return participanteDos; }
+            default -> { return null; }
         }
-        return participanteGanador;
     }
 
     /**
@@ -75,11 +74,10 @@ public class Match {
         if (!tieneResultado()) return null;
 
         switch (resultado.getOutcome()){
-            case PARTICIPANTE_UNO_GANA: participantePerdedor = participanteDos;
-            case PARTICIPANTE_DOS_GANA: participantePerdedor = participanteUno;
-            default: participantePerdedor = null;
+            case PARTICIPANTE_UNO_GANA -> { return participanteDos; }
+            case PARTICIPANTE_DOS_GANA -> { return participanteUno; }
+            default -> { return null; }
         }
-        return participantePerdedor;
     }
 
     /**
