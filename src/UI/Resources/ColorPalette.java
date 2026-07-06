@@ -13,6 +13,10 @@ public enum ColorPalette {
     COLOR_BTN_DEL(new Color(220, 80, 80)),
     COLOR_BTN_DEL_HOVER(new Color(180, 40, 40)),
 
+    COLOR_BTN_MATCH(new Color(30, 100, 140, 255)),
+    COLOR_BTN_MATCH_HOVER(new Color(20,  70, 100, 255)),
+    COLOR_BTN_MATCH_WINNER(new Color(40, 160,  80, 255)),
+
     COLOR_TEXT_DARK (new Color(37, 32, 2, 255)),
     COLOR_TEXT_LIGHT(new Color(255, 255, 255, 255)),
 
