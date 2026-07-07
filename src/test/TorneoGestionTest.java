@@ -141,20 +141,19 @@ class TorneoGestionTest {
     void generarCalendarioLigaExitoso() {
         torneoGestion.crearTorneo(nombre, disciplina, formato, fechaInicio);
 
-        // Se agregan 4 participantes
-        for (int p = 0; p < 4; p++) {
-            Participante participanteLocal = new Jugador("Local");
-            torneoGestion.inscribirParticipanteGestion(participanteLocal);
+        for (int p = 0; p <= 4; p++) {
+            torneoGestion.inscribirParticipanteGestion(new Jugador("Jugador" + p));
         }
 
         List<JornadaGestion> jornadas = torneoGestion.generarCalendarioLiga();
         assertNotNull(jornadas);
         assertFalse(jornadas.isEmpty());
-        assertEquals(6, jornadas.size());
+        assertEquals(5, jornadas.size());
     }
 
     @Test
     void generarCalendarioLigaMenosDeDosParticipantes(){
+        torneoGestion.crearTorneo(nombre, disciplina, formato, fechaInicio);
         torneoGestion.inscribirParticipanteGestion(participante1);
 
         assertThrows(IllegalStateException.class, () ->
