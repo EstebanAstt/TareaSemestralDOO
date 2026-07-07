@@ -5,7 +5,7 @@ import modelo.disciplina.*;
 import modelo.formato.*;
 import modelo.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;import java.util.List;
 
 class TorneoGestionTest {
     private TorneoGestion torneoGestion;
@@ -109,13 +109,6 @@ class TorneoGestionTest {
     }
 
     @Test
-    void verificarTorneoActivoSinTorneo(){
-        assertThrows(IllegalStateException.class, () ->
-                        torneoGestion.verificarTorneoActivo(),
-                "No hay torneo activo");
-    }
-
-    @Test
     void inscribirEquipoGestionSinTorneo(){
         assertThrows(IllegalStateException.class, () ->
                         torneoGestion.inscribirEquipoGestion(equipo),
@@ -166,5 +159,51 @@ class TorneoGestionTest {
         assertThrows(IllegalStateException.class, () ->
                 torneoGestion.generarCalendarioLiga(),
                 "Se intentó crear un calendario sin un torneo");
+    }
+
+    /** Tests de bracket de eliminatoria */
+    @Test
+    void generarBracketEliminatoriaExitoso(){
+        torneoGestion.crearTorneo(nombre, disciplina, formato, fechaInicio);
+
+        for (int p = 0; p < 4; p++){
+            torneoGestion.inscribirParticipanteGestion(new Jugador("Jugador" + p));
+        }
+        ArrayList<Match> bracket = torneoGestion.generarBracketEliminatoria();
+        assertNotNull(bracket);
+        assertEquals(3, bracket.size());
+    }
+
+    @Test
+    void generarBracketEliminatoriaMenosDeDosParticipantes(){
+        torneoGestion.crearTorneo(nombre, disciplina, formato, fechaInicio);
+        torneoGestion.inscribirParticipanteGestion(participante1);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                torneoGestion.generarBracketEliminatoria(),
+                "Se intentó crear un bracket con menos de dos jugadores");
+    }
+
+    @Test
+    void generarBracketEliminatoriaSinTorneo(){
+        assertThrows(IllegalStateException.class, () ->
+                torneoGestion.generarBracketEliminatoria(),
+                "Se intentó crear un bracket en un torneo que no existe");
+    }
+
+    /** Tests de verificación de torneo activo */
+    @Test
+    void verificarTorneoActivoSinTorneo(){
+        assertThrows(IllegalStateException.class, () ->
+                        torneoGestion.verificarTorneoActivo(),
+                "No hay torneo activo");
+    }
+
+    @Test
+    void verificarTorneoActivoExitoso(){
+        torneoGestion.crearTorneo(nombre, disciplina, formato, fechaInicio);
+
+        assertDoesNotThrow(() -> torneoGestion.verificarTorneoActivo(),
+                "Existe un torneo");
     }
 }
