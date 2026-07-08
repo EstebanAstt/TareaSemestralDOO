@@ -298,6 +298,8 @@ public abstract class BaseWindow extends JPanel {
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setPreferredSize(new Dimension(160, 38));
+        btn.setMaximumSize(new Dimension(160, 38));
         return btn;
     }
     // Cada ventana construye su propio metodo de inicializacion
