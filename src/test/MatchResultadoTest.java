@@ -5,36 +5,47 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MatchResultadoTest {
-    private Participante participanteUno;
-    private Equipo equipoUno;
+    private Participante jugadorUno;
+    private Equipo equipo;
+
+    private EventoPartido eventoGol;;
+    private EventoPartido eventoTarjeta;
+    private EventoPartido eventoTablas;
 
     @BeforeEach
-    void setUp(){
-        participanteUno = new Jugador("Jugador 1");
-        equipoUno = new Equipo("Equipo 1");
+    void setUp() {
+        jugadorUno = new Jugador("Jugador 1");
+        equipo = new Equipo("Equipo 1");
+
+        eventoGol = new EventoPartido(AccionPartido.FUTBOL_GOL,
+                jugadorUno, equipo);
+        eventoTarjeta = new EventoPartido(AccionPartido.FUTBOL_AMARILLA,
+                jugadorUno, equipo);
+        eventoTablas = new EventoPartido(AccionPartido.AJEDREZ_TABLAS,
+                jugadorUno, equipo);
     }
 
     /** Tests de Constructores */
     @Test
-    void constructorFutbolBasketValido(){
-        MatchResultado partido = new MatchResultado(3,2);
+    void constructorFutbolBasketValido() {
+        MatchResultado partido = new MatchResultado(3, 2);
         assertEquals(3.0, partido.getPuntajeUno());
         assertEquals(2.0, partido.getPuntajeDos());
         assertEquals(DeterminarGanador.PARTICIPANTE_UNO_GANA, partido.getOutcome());
     }
 
     @Test
-    void constructorFutbolBasketPuntajeNegativo(){
+    void constructorFutbolBasketPuntajeNegativo() {
         assertThrows(IllegalArgumentException.class, () ->
-                new MatchResultado(-1, 2),
+                        new MatchResultado(-1, 2),
                 "Se ingresó un puntaje negativo");
         assertThrows(IllegalArgumentException.class, () ->
-                new MatchResultado(1, -2),
+                        new MatchResultado(1, -2),
                 "Se ingresó un puntaje negativo");
     }
 
     @Test
-    void constructorTenisValido(){
+    void constructorTenisValido() {
         ArrayList<SetTenis> sets = new ArrayList<>();
         sets.add(new SetTenis(6, 3));
         sets.add(new SetTenis(4, 6));
@@ -47,19 +58,19 @@ public class MatchResultadoTest {
     }
 
     @Test
-    void constructorTenisMenosDeDosSets(){
+    void constructorTenisMenosDeDosSets() {
         ArrayList<SetTenis> sets = new ArrayList<>();
         sets.add(new SetTenis(6, 3));
 
         assertThrows(IllegalArgumentException.class, () ->
-                new MatchResultado(sets),
+                        new MatchResultado(sets),
                 "Se ingresaron menos de dos sets de tenis");
     }
 
     @Test
-    void constructorTenisSetsNulo(){
+    void constructorTenisSetsNulo() {
         assertThrows(NullPointerException.class, () ->
-                new MatchResultado(null),
+                        new MatchResultado(null),
                 "No hay ningún set de tenis ingresado");
     }
 
@@ -72,8 +83,13 @@ public class MatchResultadoTest {
     }
 
     @Test
+    void constructorAjedrezVictoria() {
+        MatchResultado partidoAjedrez = new MatchResultado(1.0, 0.0, true);
+        assertEquals(DeterminarGanador.PARTICIPANTE_UNO_GANA, partidoAjedrez.getOutcome());
+    }
+
+    @Test
     void constructorVacioOutcomeEmpate() {
-        /** Se prueba un partido sin ningún puntaje */
         MatchResultado partido = new MatchResultado();
 
         assertEquals(DeterminarGanador.EMPATE, partido.getOutcome());
@@ -83,7 +99,56 @@ public class MatchResultadoTest {
         assertTrue(partido.getEventos().isEmpty(), "No existen eventos");
     }
 
-    // Aquí van otros métodos
+    /** Tests de registro de eventos */
+    @Test
+    void registrarEventoGolParticipanteUno() {
+        MatchResultado partido = new MatchResultado();
+        partido.registrarEvento(eventoGol, true);
+
+        assertEquals(1, partido.getMarcadorUno());
+        assertEquals(0, partido.getMarcadorDos());
+        assertEquals(DeterminarGanador.PARTICIPANTE_UNO_GANA, partido.getOutcome());
+    }
+
+    @Test
+    void registrarEventoGolParticipanteDos() {
+        MatchResultado partido = new MatchResultado();
+        partido.registrarEvento(eventoGol, false);
+
+        assertEquals(0, partido.getMarcadorUno());
+        assertEquals(1, partido.getPuntajeDos());
+        assertEquals(DeterminarGanador.PARTICIPANTE_DOS_GANA, partido.getOutcome());
+    }
+
+    @Test
+    void registrarEventoTarjetaNoModificaMarcador() {
+        MatchResultado partido = new MatchResultado();
+        partido.registrarEvento(eventoTarjeta, true);
+
+        assertEquals(0, partido.getMarcadorUno());
+        assertEquals(0, partido.getMarcadorDos());
+        assertEquals(DeterminarGanador.EMPATE, partido.getOutcome());
+    }
+
+    @Test
+    void registrarEventoTablas() {
+        MatchResultado partido = new MatchResultado();
+        partido.registrarEvento(eventoTablas, true);
+
+        assertEquals(1, partido.getMarcadorUno());
+        assertEquals(1, partido.getMarcadorDos());
+        assertEquals(DeterminarGanador.EMPATE, partido.getOutcome());
+    }
+
+    @Test
+    void registrarEventoNulo() {
+        MatchResultado match = new MatchResultado();
+        assertThrows(IllegalArgumentException.class, () ->
+                        match.registrarEvento(null, true),
+                "Se registró un evento nulo");
+    }
+
+    /** Tests de validación de puntajes de ajedrez */
     @Test
     void validarPuntajesAjedrezInvalido() {
         MatchResultado resultado = new MatchResultado();
@@ -98,5 +163,13 @@ public class MatchResultadoTest {
         assertThrows(IllegalArgumentException.class, () ->
                         resultado.validarPuntajesAjedrez(1.5, -0.5),
                 "Ambos puntajes inválidos (Un negativo y otro mayor a 1.0)");
+    }
+
+    @Test
+    void validarPuntajesAjedrezValido() {
+        MatchResultado resultado = new MatchResultado();
+        assertDoesNotThrow(() -> resultado.validarPuntajesAjedrez(0.0, 1.0));
+        assertDoesNotThrow(() -> resultado.validarPuntajesAjedrez(0.5, 0.5));
+        assertDoesNotThrow(() -> resultado.validarPuntajesAjedrez(1.0, 0.0));
     }
 }
