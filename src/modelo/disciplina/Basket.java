@@ -26,7 +26,7 @@ public class Basket implements Disciplina {
         boolean validacion;
 
         switch (formato.getNombreFormato()){
-            case "Liga", "Ida y Vuelta": validacion = true;
+            case "Liga", "Ida y Vuelta", "Partido Único": validacion = true;
             default: validacion = false;
         }
         return validacion;
