@@ -116,7 +116,7 @@ public class MatchResultadoTest {
         partido.registrarEvento(eventoGol, false);
 
         assertEquals(0, partido.getMarcadorUno());
-        assertEquals(1, partido.getPuntajeDos());
+        assertEquals(1, partido.getMarcadorDos());
         assertEquals(DeterminarGanador.PARTICIPANTE_DOS_GANA, partido.getOutcome());
     }
 
