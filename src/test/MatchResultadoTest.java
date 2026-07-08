@@ -25,10 +25,10 @@ public class MatchResultadoTest {
 
     @Test
     void constructorFutbolBasketPuntajeNegativo(){
-        assertThrows(IllegalStateException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 new MatchResultado(-1, 2),
                 "Se ingresó un puntaje negativo");
-        assertThrows(IllegalStateException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 new MatchResultado(1, -2),
                 "Se ingresó un puntaje negativo");
     }
@@ -58,7 +58,7 @@ public class MatchResultadoTest {
 
     @Test
     void constructorTenisSetsNulo(){
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(NullPointerException.class, () ->
                 new MatchResultado(null),
                 "No hay ningún set de tenis ingresado");
     }
@@ -72,21 +72,6 @@ public class MatchResultadoTest {
     }
 
     @Test
-    void constructorAjedrezPuntajeInvalido() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new MatchResultado(0.3, 0.7, true),
-                "Ambos puntajes inválidos");
-
-        assertThrows(IllegalArgumentException.class, () ->
-                new MatchResultado(0.5, 0.4, true),
-                "Un puntaje inválido");
-
-        assertThrows(IllegalArgumentException.class, () ->
-                new MatchResultado(1.5, -0.5, true),
-                "Ambos puntajes inválidos (Un negativo y otro mayor a 1.0)");
-    }
-
-    @Test
     void constructorVacioOutcomeEmpate() {
         /** Se prueba un partido sin ningún puntaje */
         MatchResultado partido = new MatchResultado();
@@ -96,5 +81,22 @@ public class MatchResultadoTest {
         assertEquals(0, partido.getMarcadorDos());
 
         assertTrue(partido.getEventos().isEmpty(), "No existen eventos");
+    }
+
+    // Aquí van otros métodos
+    @Test
+    void validarPuntajesAjedrezInvalido() {
+        MatchResultado resultado = new MatchResultado();
+        assertThrows(IllegalArgumentException.class, () ->
+                        resultado.validarPuntajesAjedrez(0.3, 0.7),
+                "Ambos puntajes inválidos");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                        resultado.validarPuntajesAjedrez(0.4, 0.5),
+                "Un puntaje inválido");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                        resultado.validarPuntajesAjedrez(1.5, -0.5),
+                "Ambos puntajes inválidos (Un negativo y otro mayor a 1.0)");
     }
 }
