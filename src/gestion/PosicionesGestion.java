@@ -10,7 +10,7 @@ public class PosicionesGestion {
     Equipo equipoUno;
     Equipo equipoDos;
 
-    public void PosicionesGestion(Disciplina disciplinaGestion){
+    public PosicionesGestion(Disciplina disciplinaGestion){
         this.disciplinaGestion = disciplinaGestion;
     }
 
