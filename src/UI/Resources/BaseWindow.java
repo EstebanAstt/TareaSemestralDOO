@@ -73,7 +73,7 @@ public abstract class BaseWindow extends JPanel {
             }
         };
     }
-    protected JButton buildButton(String text, Color bgColor, Color hoverColor, Color textColor) {
+    public static JButton buildButton(String text, Color bgColor, Color hoverColor, Color textColor) {
         JButton btn = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
