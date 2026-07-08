@@ -3,11 +3,13 @@ package UI;
 import UI.Resources.AppWindow;
 import UI.Resources.BaseWindow;
 import UI.Resources.ColorPalette;
+import gestion.BracketUtils;
 import gestion.BracketsGestion;
 import gestion.TorneoGestion;
 import modelo.Match;
 import modelo.MatchResultado;
 import modelo.Participante;
+import modelo.formato.PartidoUnico;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -120,21 +122,29 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
 
         ArrayList<Match> partidos = bracketsGestion.getPartidosBracketsGestion();
 
-        // Agrupar por ronda manteniendo el orden
+        // Agrupar por ronda manteniendo orden
         Map<Integer, List<Match>> porRonda = new LinkedHashMap<>();
         for (Match m : partidos) {
             porRonda.computeIfAbsent(m.getRonda(), k -> new ArrayList<>()).add(m);
         }
 
-        int totalRondas = porRonda.size();
+        // ── FILTRO: solo mostrar rondas donde al menos un match tiene participantes ──
+        Map<Integer, List<Match>> rondasVisibles = new LinkedHashMap<>();
+        for (Map.Entry<Integer, List<Match>> entry : porRonda.entrySet()) {
+            boolean tieneParticipantes = entry.getValue().stream()
+                    .anyMatch(m -> m.getParticipanteUno() != null || m.getParticipanteDos() != null);
+            if (tieneParticipantes) {
+                rondasVisibles.put(entry.getKey(), entry.getValue());
+            }
+        }
 
-        // Layout horizontal: una columna por ronda
+        int totalRondas = rondasVisibles.size();
         panelRondas.setLayout(new GridLayout(1, totalRondas, 30, 0));
         panelRondas.setBorder(new EmptyBorder(10, 40, 10, 40));
 
         int numRonda = 1;
-        for (Map.Entry<Integer, List<Match>> entry : porRonda.entrySet()) {
-            String nombreFase = getNombreFase(entry.getValue().size());
+        for (Map.Entry<Integer, List<Match>> entry : rondasVisibles.entrySet()) {
+            String nombreFase = BracketUtils.getNombreFase(entry.getValue().size());
             panelRondas.add(buildColumnaRonda(nombreFase, entry.getValue(), numRonda == totalRondas));
             numRonda++;
         }
@@ -191,9 +201,9 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
         );
 
         JButton btnP2 = buildButtonTruncado(
-                p2 != null ? p1.getName() : "BYE",
-                p2 != null && p1.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor() : ColorPalette.COLOR_BTN_MATCH.getColor(),
-                p2 != null && p1.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor().darker() : ColorPalette.COLOR_BTN_MATCH_HOVER.getColor()
+                p2 != null ? p2.getName() : "BYE",
+                p2 != null && p2.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor() : ColorPalette.COLOR_BTN_MATCH.getColor(),
+                p2 != null && p2.equals(ganador) ? ColorPalette.COLOR_BTN_MATCH_WINNER.getColor().darker() : ColorPalette.COLOR_BTN_MATCH_HOVER.getColor()
         );
 
         // Al hacer clic en el par → futuro: registrar resultado
@@ -233,22 +243,31 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
     // Lógica
     // ─────────────────────────────────────────────────────────────────
 
-    /** Llamado cuando el usuario hace clic en un enfrentamiento. */
     private void onClickMatch(Match match) {
+        if (match.getParticipanteUno() == null || match.getParticipanteDos() == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Este partido está esperando al ganador de una ronda anterior.",
+                    "Partido no disponible", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
         if (match.tieneResultado()) {
             JOptionPane.showMessageDialog(this,
                     "Ganador: " + match.getGanadorMatch().getName(),
-                    "Resultado", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            MatchResultado resultado = RegistrarResultadoDialogo.mostrar(
-                    this,   // Component padre
-                    match,  // el Match seleccionado
-                    torneoGestion.getTorneo().getDisciplinaTorneo().getNombreDisciplina()
-            );
-            if (resultado != null) {
-                match.setResultadoMatch(resultado);
-                // actualizar bracket, tabla de posiciones, etc.
-            }
+                    "Resultado registrado", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        boolean permitirEmpate = !(torneoGestion.getTorneo()
+                .getFormatoTorneo() instanceof PartidoUnico);
+
+        // Abrir el diálogo de registro
+        String disciplina = torneoGestion.getTorneo().getDisciplinaTorneo().getNombreDisciplina();
+        MatchResultado resultado = RegistrarResultadoDialogo.mostrar(this, match, disciplina, permitirEmpate);
+
+        if (resultado != null) {
+            match.setResultadoMatch(resultado);
+            bracketsGestion.registrarResultado(match); // notifica Observer → refresca panel
         }
     }
     /**
