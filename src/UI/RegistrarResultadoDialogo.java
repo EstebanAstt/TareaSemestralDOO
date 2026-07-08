@@ -11,6 +11,8 @@ import java.util.List;
 
 import static UI.Resources.BaseWindow.buildButton;
 
+import static gestion.BracketUtils.buildTextoEvento;
+
 /**
  * Diálogo modal para registrar el resultado de un partido acción por acción.
  *
@@ -54,6 +56,7 @@ public class RegistrarResultadoDialogo extends JDialog {
 
     // ── Estado de salida ──────────────────────────────────────────────────────
     private boolean confirmado = false;
+    private final boolean permitirEmpate;
 
     // ── Paleta (igual a la del resto del proyecto) ────────────────────────────
     private static final Color BTN_BG     = ColorPalette.COLOR_BTN.getColor();
@@ -86,12 +89,13 @@ public class RegistrarResultadoDialogo extends JDialog {
     // Constructor
     // ══════════════════════════════════════════════════════════════════════════
 
-    public RegistrarResultadoDialogo(Frame parent, Match match, String disciplina) {
+    public RegistrarResultadoDialogo(Frame parent, Match match, String disciplina, boolean permitirEmpate) {
         super(parent, "Partido en curso", true);
         this.match        = match;
         this.disciplina   = disciplina.toUpperCase();
         this.resultado    = new MatchResultado();
         this.modelEventos = new DefaultListModel<>();
+        this.permitirEmpate = permitirEmpate;
 
         buildUI();
         setResizable(false);
@@ -204,7 +208,7 @@ public class RegistrarResultadoDialogo extends JDialog {
         return grid;
     }
 
-    /** Etiqueta central con el nombre de la acción, subrayada como en el mockup. */
+    /** Etiqueta central con el nombre de la acción */
     private JLabel buildEtiquetaAccion(AccionPartido accion) {
         JLabel lbl = new JLabel(accion.getNombre(), SwingConstants.CENTER) {
             @Override
@@ -225,12 +229,12 @@ public class RegistrarResultadoDialogo extends JDialog {
         return lbl;
     }
 
-    /** Botón de acción: rectángulo redondeado de color primario (sin texto, como en el mockup). */
+    /** Botón de acción: rectángulo redondeado de color primario */
     private JButton buildBotonAccion(AccionPartido accion, Participante participante, boolean esUno) {
         JButton btn = buildButton("", BTN_BG, BTN_HOVER, BTN_FG);
         btn.setPreferredSize(new Dimension(130, 38));
         // Tooltip para ayudar a identificar a qué equipo corresponde
-        btn.setToolTipText(participante.getName() + " → " + accion.getNombre());
+        btn.setToolTipText(participante.getName() + " -> " + accion.getNombre());
         btn.addActionListener(e -> onAccion(accion, participante, esUno));
         return btn;
     }
@@ -264,7 +268,7 @@ public class RegistrarResultadoDialogo extends JDialog {
 
         btnDeshacer .addActionListener(e -> onDeshacer());
         btnCancelar .addActionListener(e -> dispose());
-        btnConfirmar.addActionListener(e -> { confirmado = true; dispose(); });
+        btnConfirmar.addActionListener(e -> confirmar());
 
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
         btnRow.add(btnDeshacer);
@@ -353,8 +357,9 @@ public class RegistrarResultadoDialogo extends JDialog {
                 .orElse(equipo);
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
+    /**
+     * Sirve para actualizar los marcadores en vivo
+     */
     private void actualizarMarcadores() {
         lblMarcadorUno.setText(String.valueOf(resultado.getMarcadorUno()));
         lblMarcadorDos.setText(String.valueOf(resultado.getMarcadorDos()));
@@ -368,38 +373,23 @@ public class RegistrarResultadoDialogo extends JDialog {
             );
         }
     }
-
-    /**
-     * Genera el texto para el historial de eventos.
-     * Ejemplos: "1. [+1] Gol — Equipo A (Jugador X)"
-     *           "2. [Autogol] Autogol — Equipo B"
-     *           "3. [Sanción] T. Amarilla — Equipo A (Jugador Y)"
-     */
-    private String buildTextoEvento(AccionPartido accion, Participante autor,
-                                    Participante equipo, int num) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(num).append(". ");
-
-        if (accion.isSumaAlRival())       sb.append("[Autogol] ");
-        else if (accion.getPuntos() == 0) sb.append("[Sanción] ");
-        else                              sb.append("[+").append(accion.getPuntos()).append("] ");
-
-        sb.append(accion.getNombre())
-                .append("  —  ")
-                .append(equipo.getName());
-
-        if (!autor.equals(equipo)) {
-            sb.append(" (").append(autor.getName()).append(")");
-        }
-
-        return sb.toString();
-    }
     /**
      * @return el {@link MatchResultado} acumulado si el usuario confirmó;
      *         {@code null} si canceló o cerró el diálogo.
      */
     public MatchResultado getResultado() {
         return confirmado ? resultado : null;
+    }
+
+    private void confirmar() {
+        if (!permitirEmpate && resultado.esEmpate()) {
+            JOptionPane.showMessageDialog(this,
+                    "Este formato no permite empates. Registra una acción más para definir un ganador.",
+                    "Empate no permitido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        confirmado = true;
+        dispose();
     }
 
     /**
@@ -414,9 +404,9 @@ public class RegistrarResultadoDialogo extends JDialog {
      *                   (p. ej. {@code "Futbol"}, {@code "Basket"})
      * @return el {@link MatchResultado} si se confirmó; {@code null} si se canceló
      */
-    public static MatchResultado mostrar(Component parent, Match match, String disciplina) {
+    public static MatchResultado mostrar(Component parent, Match match, String disciplina, boolean permitirEmpate) {
         Frame frame = (Frame) SwingUtilities.getWindowAncestor(parent);
-        RegistrarResultadoDialogo dlg = new RegistrarResultadoDialogo(frame, match, disciplina);
+        RegistrarResultadoDialogo dlg = new RegistrarResultadoDialogo(frame, match, disciplina, permitirEmpate);
         dlg.setVisible(true);
         return dlg.getResultado();
     }
