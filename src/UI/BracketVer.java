@@ -6,6 +6,7 @@ import UI.Resources.ColorPalette;
 import gestion.BracketsGestion;
 import gestion.TorneoGestion;
 import modelo.Match;
+import modelo.MatchResultado;
 import modelo.Participante;
 
 import javax.swing.*;
@@ -239,10 +240,15 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
                     "Ganador: " + match.getGanadorMatch().getName(),
                     "Resultado", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            // TODO: abrir diálogo para registrar resultado
-            JOptionPane.showMessageDialog(this,
-                    match.getParticipanteUno().getName() + " vs " + match.getParticipanteDos().getName(),
-                    "Partido pendiente", JOptionPane.INFORMATION_MESSAGE);
+            MatchResultado resultado = RegistrarResultadoDialogo.mostrar(
+                    this,   // Component padre
+                    match,  // el Match seleccionado
+                    torneoGestion.getTorneo().getDisciplinaTorneo().getNombreDisciplina()
+            );
+            if (resultado != null) {
+                match.setResultadoMatch(resultado);
+                // actualizar bracket, tabla de posiciones, etc.
+            }
         }
     }
     /**
