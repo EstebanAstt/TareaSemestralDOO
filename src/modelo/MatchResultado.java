@@ -1,6 +1,9 @@
 package modelo;
 
+import modelo.enums.AccionPartido;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class MatchResultado {
 
@@ -13,6 +16,14 @@ public class MatchResultado {
 
     /** Enum para ver si existe un ganador o empate */
     private DeterminarGanador outcome;
+
+
+    /** Lista de eventos ocurridos durante el partido */
+    private final List<EventoPartido> eventos = new ArrayList<>();
+
+    /** Marcadores calculados dinámicamente a partir de eventos */
+    private int marcadorUno = 0;
+    private int marcadorDos = 0;
 
     /**
      * Determina un ganador empate dependiendo de los puntajes ingresados
@@ -34,6 +45,14 @@ public class MatchResultado {
         if (puntajeUno < 0 || puntajeDos < 0){
             throw new IllegalArgumentException("Los puntajes no pueden ser negativos");
         }
+    }
+
+    /**
+     * Constructor para partidos en curso.
+     * Los marcadores se calculan a medida que se registran eventos.
+     */
+    public MatchResultado() {
+        this.outcome = DeterminarGanador.EMPATE; // empieza 0-0
     }
 
     /**
@@ -123,4 +142,40 @@ public class MatchResultado {
     public ArrayList<SetTenis> getSetsTenis(){
         return setsTenis;
     }
+
+
+    /**
+     * Registra un evento en el partido y actualiza el marcador.
+     *
+     * @param evento            el evento a registrar
+     * @param esParticipanteUno true si el equipoOrigen es el participante uno del Match
+     */
+    public void registrarEvento(EventoPartido evento, boolean esParticipanteUno) {
+        if (evento == null) throw new IllegalArgumentException("El evento no puede ser nulo.");
+        eventos.add(evento);
+
+        int puntos = evento.getAccion().getPuntos();
+        if (puntos == 0) return; // tarjetas y similares no mueven el marcador
+
+        if (evento.getAccion() == AccionPartido.AJEDREZ_TABLAS) {
+            // Tablas: suma 1 a cada uno
+            marcadorUno++;
+            marcadorDos++;
+        } else if (evento.getAccion().isSumaAlRival()) {
+            // Autogol: suma al rival
+            if (esParticipanteUno) marcadorDos += puntos;
+            else                   marcadorUno += puntos;
+        } else {
+            // Caso normal
+            if (esParticipanteUno) marcadorUno += puntos;
+            else                   marcadorDos += puntos;
+        }
+
+        // Recalcular outcome
+        this.outcome = setDeterminarGanador(marcadorUno, marcadorDos);
+    }
+
+    public List<EventoPartido> getEventos()  { return eventos; }
+    public int getMarcadorUno()              { return marcadorUno; }
+    public int getMarcadorDos()              { return marcadorDos; }
 }
