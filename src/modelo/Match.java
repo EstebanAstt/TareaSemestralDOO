@@ -26,14 +26,12 @@ public class Match {
     public Match(Participante participanteUno, Participante participanteDos,
                  int ronda, int posicionBracket, LocalDateTime fecha){
 
-        if (participanteUno == null || participanteDos == null){
-            throw new IllegalArgumentException("Ningún participante puede ser nulo");
-        }
-        if (participanteUno.equals(participanteDos)){
-            throw new IllegalArgumentException("Los participantes deben ser distintos");
-        }
         if (ronda < 1){
             throw new IllegalArgumentException("Debe existir por lo menos una ronda");
+        }
+        // participantes pueden ser null en rondas futuras (se asignan cuando avanza el ganador)
+        if (participanteUno != null && participanteUno.equals(participanteDos)){
+            throw new IllegalArgumentException("Los participantes deben ser distintos");
         }
         this.participanteUno = participanteUno;
         this.participanteDos = participanteDos;
@@ -108,4 +106,15 @@ public class Match {
     }
 
     public int getRonda() { return ronda; }
+
+    /**
+     * Asigna el participante uno y dos al match.
+     * Solo se usa para poblar matches de rondas futuras en eliminatoria.
+     */
+    public void setParticipanteUno(Participante p) { this.participanteUno = p; }
+    public void setParticipanteDos(Participante p) { this.participanteDos = p; }
+
+    public int getPosicionBracket() {
+        return posicionBracket;
+    }
 }
