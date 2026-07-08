@@ -38,7 +38,7 @@ public class Futbol implements Disciplina {
 
     @Override
     public String getNombreDisciplina(){
-        return "Fútbol";
+        return "Futbol";
     }
 
     @Override
