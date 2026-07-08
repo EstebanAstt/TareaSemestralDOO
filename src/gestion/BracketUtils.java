@@ -1,5 +1,8 @@
 package gestion;
 
+import modelo.Participante;
+import modelo.enums.AccionPartido;
+
 import java.awt.*;
 
 /**
@@ -33,5 +36,31 @@ public class BracketUtils {
             texto = texto.substring(0, texto.length() - 1);
         }
         return texto + "...";
+    }
+
+    /**
+     * Genera el texto para el historial de eventos.
+     * Ejemplos: "1. [+1] Gol — Equipo A (Jugador X)"
+     *           "2. [Autogol] Autogol — Equipo B"
+     *           "3. [Sanción] T. Amarilla — Equipo A (Jugador Y)"
+     */
+    public static String buildTextoEvento(AccionPartido accion, Participante autor,
+                                    Participante equipo, int num) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(num).append(". ");
+
+        if (accion.isSumaAlRival())       sb.append("[Autogol] ");
+        else if (accion.getPuntos() == 0) sb.append("[Sanción] ");
+        else                              sb.append("[+").append(accion.getPuntos()).append("] ");
+
+        sb.append(accion.getNombre())
+                .append("  —  ")
+                .append(equipo.getName());
+
+        if (!autor.equals(equipo)) {
+            sb.append(" (").append(autor.getName()).append(")");
+        }
+
+        return sb.toString();
     }
 }
