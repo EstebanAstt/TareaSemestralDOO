@@ -9,12 +9,12 @@ public class Ajedrez implements Disciplina {
 
     @Override
     public double puntajeVictoria(){
-        return 1.0;
+        return 2.0;
     }
 
     @Override
     public double puntajeEmpate(){
-        return 0.5;
+        return 1.0;
     }
 
     @Override
