@@ -39,12 +39,13 @@ public class MatchResultado {
 
     /** Constructor para Futbol y basket */
     public MatchResultado(int puntajeUno, int puntajeDos){
-        this.puntajeUno = (double)puntajeUno;
-        this.puntajeDos = (double)puntajeDos;
-
         if (puntajeUno < 0 || puntajeDos < 0){
             throw new IllegalArgumentException("Los puntajes no pueden ser negativos");
         }
+
+        this.puntajeUno = (double)puntajeUno;
+        this.puntajeDos = (double)puntajeDos;
+        this.outcome = setDeterminarGanador(puntajeUno, puntajeDos);
     }
 
     /**
