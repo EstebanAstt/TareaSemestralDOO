@@ -9,6 +9,8 @@ import modelo.Equipo;
 import modelo.Match;
 import modelo.Participante;
 
+import static gestion.BracketUtils.asignarGanadorASiguiente;
+
 public class PartidoUnico implements TorneoFormato {
     private BracketsGestion gestionPartidoUnico;
 
@@ -72,7 +74,7 @@ public class PartidoUnico implements TorneoFormato {
         int matchesPorRonda = potencia / 2;
         while (matchesPorRonda >= 1) {
             for (int pos = 0; pos < matchesPorRonda; pos++) {
-                todos.add(new Match(null, null, ronda, pos, null));
+                todos.add(new Match(null, null, ronda, pos, null, false));
             }
             matchesPorRonda /= 2;
             ronda++;
@@ -108,25 +110,6 @@ public class PartidoUnico implements TorneoFormato {
         }
 
         return todos;
-    }
-
-    /**
-     * Asigna un participante (ganador o bye) al match de la ronda siguiente.
-     */
-    private void asignarGanadorASiguiente(Participante ganador, Match matchActual,
-                                          ArrayList<Match> todos) {
-        int rondaSiguiente = matchActual.getRonda() + 1;
-        int posActual      = matchActual.getPosicionBracket();
-        int posSiguiente   = posActual / 2;
-
-        for (Match siguiente : todos) {
-            if (siguiente.getRonda() == rondaSiguiente
-                    && siguiente.getPosicionBracket() == posSiguiente) {
-                if (posActual % 2 == 0) siguiente.setParticipanteUno(ganador);
-                else                    siguiente.setParticipanteDos(ganador);
-                break;
-            }
-        }
     }
 
     @Override

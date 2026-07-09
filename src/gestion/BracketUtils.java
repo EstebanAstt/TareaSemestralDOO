@@ -1,9 +1,11 @@
 package gestion;
 
+import modelo.Match;
 import modelo.Participante;
 import modelo.enums.AccionPartido;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Métodos utilitarios para la visualización de brackets.
@@ -71,5 +73,24 @@ public class BracketUtils {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Asigna un participante (ganador o bye) al match de la ronda siguiente.
+     */
+    public static void asignarGanadorASiguiente(Participante ganador, Match matchActual,
+                                                ArrayList<Match> todos) {
+        int rondaSiguiente = matchActual.getRonda() + 1;
+        int posActual      = matchActual.getPosicionBracket();
+        int posSiguiente   = posActual / 2;
+
+        for (Match siguiente : todos) {
+            if (siguiente.getRonda() == rondaSiguiente
+                    && siguiente.getPosicionBracket() == posSiguiente) {
+                if (posActual % 2 == 0) siguiente.setParticipanteUno(ganador);
+                else                    siguiente.setParticipanteDos(ganador);
+                break;
+            }
+        }
     }
 }

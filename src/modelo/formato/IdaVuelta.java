@@ -1,9 +1,14 @@
 package modelo.formato;
 
 import java.util.ArrayList;
+
+import gestion.BracketUtils;
 import gestion.BracketsGestion;
 import modelo.Equipo;
 import modelo.Match;
+import modelo.Participante;
+
+import gestion.BracketUtils;
 
 public class IdaVuelta implements TorneoFormato{
     private BracketsGestion gestionIdaVuelta;
@@ -19,13 +24,12 @@ public class IdaVuelta implements TorneoFormato{
     }
 
     @Override
-    public ArrayList<Match> generarMatches(Equipo equipoTorneo){
-        ArrayList<Match> matchesIdaVuelta = new ArrayList<>();
-
-        if (equipoTorneo.getEquipoSize() < getMinimoParticipantes()) {
-            throw new IllegalArgumentException("Se necesitan por lo menos 3 jugadores");
-        }
-        return matchesIdaVuelta;
+    public ArrayList<Match> generarMatches(Equipo equipoTorneo) {
+        PartidoUnico base = new PartidoUnico();
+        ArrayList<Match> matches = base.generarMatches(equipoTorneo);
+        // Marcar todos como ida y vuelta
+        matches.forEach(m -> m.setEsIdaVuelta(true));
+        return matches;
     }
 
     @Override
