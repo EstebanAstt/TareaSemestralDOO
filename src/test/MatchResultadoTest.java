@@ -4,6 +4,10 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test encargado de ver los casos del
+ * resultado de un enfrentamiento
+ */
 public class MatchResultadoTest {
     private Participante jugadorUno;
     private Equipo equipo;

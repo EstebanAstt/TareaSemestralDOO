@@ -4,6 +4,10 @@ import modelo.Participante;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test encargado de ver los casos posibles en la
+ * creación de un temporizador para una carrera
+ */
 public class TemporizadorGestionTest {
     private TemporizadorGestion temporizadorGestion;
     private Participante jugadorUno;

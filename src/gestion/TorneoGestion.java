@@ -11,6 +11,9 @@ import modelo.Torneo;
 import modelo.disciplina.Disciplina;
 import modelo.formato.TorneoFormato;
 
+/**
+ * Define las principales acciones de un Organizador de un torneo
+ */
 public class TorneoGestion {
 
     private Torneo torneo;
@@ -21,6 +24,14 @@ public class TorneoGestion {
     // Crear torneo
     // ─────────────────────────────────────────────────────────────────
 
+    /**
+     * Crea el torneo
+     * @param nombre Nombre del torneo
+     * @param disciplina Disciplina del torneo
+     * @param formato Formato del torneo
+     * @param fechaInicio Fecha de inicio
+     * @return El torneo creado
+     */
     public Torneo crearTorneo(String nombre, Disciplina disciplina,
                               TorneoFormato formato, LocalDate fechaInicio) {
         try {
@@ -35,6 +46,10 @@ public class TorneoGestion {
     // Participantes
     // ─────────────────────────────────────────────────────────────────
 
+    /**
+     * Inscribe un participante individual
+     * @param participante Participante al cual se quiere inscribir
+     */
     public void inscribirParticipanteGestion(Participante participante) {
         verificarTorneoActivo();
         if (torneo.getParticipantes().contains(participante)) {
@@ -47,6 +62,7 @@ public class TorneoGestion {
      * Inscribe el equipo como unidad, no como jugadores sueltos.
      * Así el bracket puede mostrar "Real Madrid vs Barcelona"
      * en vez de "Vinicius vs Carvajal".
+     * @param equipo Equipo al cual se quiere inscribir
      */
     public void inscribirEquipoGestion(Equipo equipo) {
         verificarTorneoActivo();
@@ -56,11 +72,19 @@ public class TorneoGestion {
         torneo.inscribirParticipanteIndividual(equipo);
     }
 
+    /**
+     * Elimina un participante individual
+     * @param participante Participante al cual se quiere eliminar
+     */
     public void eliminarParticipanteGestion(Participante participante) {
         verificarTorneoActivo();
         torneo.eliminarParticipanteIndividual(participante);
     }
 
+    /**
+     * Elimina un equipo
+     * @param equipo Equipo al cual se quiere eliminar
+     */
     public void eliminarEquipoGestion(Equipo equipo) {
         verificarTorneoActivo();
         torneo.eliminarParticipanteIndividual(equipo);
@@ -73,6 +97,7 @@ public class TorneoGestion {
     /**
      * Genera el calendario de liga usando GeneradorLigaGestion.
      * Mantiene la estructura de jornadas para mostrarlas en el panel.
+     * @return La lista de jornadas del calendario
      */
     public List<JornadaGestion> generarCalendarioLiga() {
         verificarTorneoActivo();
@@ -87,6 +112,7 @@ public class TorneoGestion {
      * Genera el bracket de eliminatoria directa.
      * Construye un Equipo temporal como contenedor de participantes
      * para compatibilidad con BracketsGestion.
+     * @return Un ArrayList de partidos que representan un bracket
      */
     public ArrayList<Match> generarBracketEliminatoria() {
         verificarTorneoActivo();
@@ -94,7 +120,7 @@ public class TorneoGestion {
             throw new IllegalStateException("Se necesitan al menos 2 participantes.");
         }
 
-        // Equipo temporal: solo sirve como contenedor para el generador
+        /** Equipo temporal: solo sirve como contenedor para el generador */
         Equipo contenedor = new Equipo("__bracket__");
         torneo.getParticipantes().forEach(contenedor::addjugador);
 
@@ -106,6 +132,9 @@ public class TorneoGestion {
     // Helpers
     // ─────────────────────────────────────────────────────────────────
 
+    /**
+     * Verifica si el torneo está en curso
+     */
     public void verificarTorneoActivo() {
         if (torneo == null) {
             throw new IllegalStateException("No existe un torneo activo");

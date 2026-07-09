@@ -7,6 +7,10 @@ import modelo.*;
 import java.time.LocalDate;
 import java.util.ArrayList;import java.util.List;
 
+/**
+ * Test encargado de ver los casos posibles en las
+ * acciones de un Organizador de un torneo
+ */
 class TorneoGestionTest {
     private TorneoGestion torneoGestion;
 
