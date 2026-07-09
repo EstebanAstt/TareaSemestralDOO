@@ -17,6 +17,9 @@ public enum ColorPalette {
     COLOR_BTN_MATCH_HOVER(new Color(20,  70, 100, 255)),
     COLOR_BTN_MATCH_WINNER(new Color(40, 160,  80, 255)),
 
+
+    COLOR_BTN_PENDING_MATCH(new Color(200, 160, 0)),
+
     COLOR_TEXT_DARK (new Color(37, 32, 2, 255)),
     COLOR_TEXT_LIGHT(new Color(255, 255, 255, 255)),
 
