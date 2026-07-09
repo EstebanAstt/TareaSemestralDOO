@@ -7,6 +7,10 @@ import UI.rol.RolStrategy;
 
 import javax.swing.*;
 
+/**
+ * Es el Menu donde se indica que acciones puede hacer el espectador u organizador,
+ * tienen interfaces similares
+ */
 public class MenuOpcionesPanel extends BaseWindow {
     private final RolStrategy strategy;
 
@@ -52,7 +56,7 @@ public class MenuOpcionesPanel extends BaseWindow {
             mainPanel.add(btn);
         }
 
-        // ── Botón Volver (esquina inferior izquierda)
+        // Botón Volver (esquina inferior izquierda)
         JButton btnVolver = buildButton(
                 "Volver",
                 ColorPalette.COLOR_BTN_BACK.getColor(),
