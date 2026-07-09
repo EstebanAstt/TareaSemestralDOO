@@ -1,5 +1,9 @@
-package UI;
+package UI.CrearTorneoPanel;
 
+import UI.BracketPanel.BracketVer;
+import UI.Dialogo;
+import UI.MenuOpcionesPanel;
+import UI.PosicionesPanel.PosicionesVer;
 import UI.Resources.AppWindow;
 import UI.Resources.BaseWindow;
 import UI.Resources.ColorPalette;
@@ -8,7 +12,6 @@ import gestion.TorneoGestion;
 import modelo.Equipo;
 import modelo.Jugador;
 import modelo.Participante;
-import modelo.Torneo;
 import modelo.enums.DisciplinaEnum;
 import modelo.enums.FormatoEnum;
 import modelo.formato.Liga;
