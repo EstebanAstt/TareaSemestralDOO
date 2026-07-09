@@ -2,6 +2,12 @@ package UI.Resources;
 
 import java.awt.*;
 
+/**
+ * como dice su nombre Colorpalette es la paleta de
+ * colores utilizada en toda la aplicacion, sirve
+ * para no confundirse de colores y que los paneles no
+ * esten tan llenos de colores nuevos
+ */
 public enum ColorPalette {
     COLOR_BTN(new Color(56, 162, 234, 255)),
     COLOR_BTN_HOVER(new Color(27, 84, 120)),
