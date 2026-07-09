@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class CrearTorneoPanel extends BaseWindow {
 
-    // Estado interno
+    // Estado interno inicial del formulario
     private int disciplinaIdx  = -1;
     private int formatoIdx     = -1;
     private boolean usaEquipos = true;
@@ -47,12 +47,19 @@ public class CrearTorneoPanel extends BaseWindow {
     private JTextField campoNombre;
     private JTextField campoFecha;
 
+    /**
+     *
+     * @param appWindow el JFrame central de toda la aplicacion
+     */
     public CrearTorneoPanel(AppWindow appWindow) {
         super(appWindow);
         loadBackgroundImage("MenuCrearTorneo.png");
         initUI();
     }
 
+    /**
+     * se inicializa la UI añadiendo el fondo y ejecutando el JPanel del formulario
+     */
     @Override
     protected void initUI() {
         setLayout(new BorderLayout());
@@ -75,7 +82,9 @@ public class CrearTorneoPanel extends BaseWindow {
 
     /**
      *
-     * @return la estructura principal del formulario para crear un nuevo torneo
+     * @return la estructura principal del formulario para crear un nuevo torneo.
+     * Gracias al formulario se puede hacer un torneo personalizado, eligiendo el nombre,
+     * la disciplina, el formato, etc.
      */
     private JPanel buildFormulario() {
         JPanel panel = new JPanel();
@@ -105,6 +114,7 @@ public class CrearTorneoPanel extends BaseWindow {
         grupoDisciplina.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(grupoDisciplina);
         panel.add(Box.createVerticalStrut(20));
+
         //Campo donde se indica el formato de la disciplina escogida
         panel.add(buildEtiqueta("Formato"));
         panel.add(Box.createVerticalStrut(6));
@@ -117,12 +127,14 @@ public class CrearTorneoPanel extends BaseWindow {
         panelFormatos.add(placeholder);
         panel.add(panelFormatos);
         panel.add(Box.createVerticalStrut(20));
+
         //Campo donde se escoge la fecha inicial para el torneo
         panel.add(buildEtiqueta("Fecha de inicio (dd/mm/aaaa)"));
         panel.add(Box.createVerticalStrut(6));
         campoFecha = buildCampoTexto("Ej: 01/01/2000");
         panel.add(campoFecha);
         panel.add(Box.createVerticalStrut(24));
+
         //Campo donde se pueden ver los participantes del torneo
         labelTipoParticipante = buildEtiqueta("Participantes");
         panel.add(labelTipoParticipante);
@@ -167,6 +179,10 @@ public class CrearTorneoPanel extends BaseWindow {
         return panel;
     }
 
+    /**
+     *
+     * @return
+     */
     private JPanel buildListaParticipantes() {
         JPanel panelParticipantes = new JPanel(new BorderLayout(0, 6));
         panelParticipantes.setOpaque(false);
@@ -342,18 +358,11 @@ public class CrearTorneoPanel extends BaseWindow {
     /**
      * Aca es donde se crea el torneo, primero verifica que se ingresen datos permitidos,
      * es decir, nombre disciplina formato, fecha y cantidad de participantes, cuando
-     * verifica que los datos son validos, crea un nuevo torneo y POR EL MOMENTO avisa al
-     * usuario que se creo un torneo, AHORA, hay que guardar ese torneo en una lista de
-     * torneos probablemente (para luego poder buscarlos), y entrar a otra interfaz para
-     * comenzar a jugar el torneo
+     * verifica que los datos son validos, crea un nuevo torneo
      */
     private void crearTorneo() {
         String nombre = campoNombre.getText().trim();
         if (!validarDisciplinaSeleccionada()) return;
-        if (disciplinaIdx < 0) {
-            JOptionPane.showMessageDialog(this, "Selecciona una disciplina.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
         if (formatoIdx < 0) {
             JOptionPane.showMessageDialog(this, "Selecciona un formato.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -386,7 +395,10 @@ public class CrearTorneoPanel extends BaseWindow {
                 else                        gestion.inscribirParticipanteGestion(p);
             });
 
-            // ── Generar el bracket ANTES de abrir el panel ─────────────────
+            /**
+             * Se consigue el formato del torneo, si es liga genera un Calendario de liga y muestra el
+             * panel con las posiciones, si no muestra los bracket de eliminatoria (ya sea ida o ida y vuelta)
+             */
             TorneoFormato formatoTorneo = gestion.getTorneo().getFormatoTorneo();
 
             if (formatoTorneo instanceof Liga) {
