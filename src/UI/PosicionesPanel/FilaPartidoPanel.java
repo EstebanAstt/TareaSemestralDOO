@@ -79,7 +79,7 @@ public class FilaPartidoPanel extends JPanel {
 
                 if (resultado != null) {
                     match.setResultadoMatch(resultado);
-                    // ¡Aquí ejecutamos el Callback para avisarle a la pantalla principal que se refresque!
+                    // se ejecuta el Callback para avisarle a PosicionesVer que se refresque
                     onResultadoRegistrado.run();
                 }
             });

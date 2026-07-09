@@ -92,10 +92,10 @@ public class PosicionesVer extends BaseWindow {
         add(fondo, BorderLayout.CENTER);
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // Cabecera
-    // ─────────────────────────────────────────────────────────────────
-
+    /**
+     * parte superior de PosicionesVer, esta el titulo y Datos basicos del torneo
+     * @return panel con la informacion
+     */
     private JPanel buildCabecera() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
