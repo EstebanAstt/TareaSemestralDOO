@@ -11,10 +11,15 @@ import java.awt.*;
  */
 public class BracketUtils {
 
+    /**
+     * Constructor por defecto
+     */
     private BracketUtils() {}
 
     /**
      * Devuelve el nombre de la fase según la cantidad de partidos en esa ronda.
+     * @param cantidadPartidos Número entero que representa la cantidad de partidos
+     * @return La fase en variable String
      */
     public static String getNombreFase(int cantidadPartidos) {
         return switch (cantidadPartidos) {
@@ -29,6 +34,10 @@ public class BracketUtils {
 
     /**
      * Trunca el texto si no cabe en el ancho disponible.
+     * @param texto String ingresado
+     * @param fm Métrica del font a utilizar
+     * @param maxAncho Máximo tamaño de palabras de ancho
+     * @return String del texto ingresado más "..."
      */
     public static String truncar(String texto, FontMetrics fm, int maxAncho) {
         if (fm.stringWidth(texto) <= maxAncho) return texto;

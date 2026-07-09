@@ -98,16 +98,28 @@ public class BracketsGestion {
         notificarMatchActualizado(partido);
     }
 
-    /** Getters */
-    
+
+    /**
+     * Retorna el ArrayList de los partidos
+     * @return Los partidos
+     */
     public ArrayList<Match> getPartidosBracketsGestion(){
         return partidos;
     }
 
+    /**
+     * Retorna el formato
+     * @return El formato definido en el constructor
+     */
     public TorneoFormato getFormatoBracketsGestion(){
         return formato;
     }
 
+    /**
+     * Retorna la cantidad de partidos esperados
+     * @param equipo Equipo el cual se utiliza para getCantidadMatches
+     * @return La cantidad de partidos esperados definidos por el formato
+     */
     public int getCantidadPartidosEsperados(Equipo equipo){
         return formato.getCantidadMatches(equipo);
     }
