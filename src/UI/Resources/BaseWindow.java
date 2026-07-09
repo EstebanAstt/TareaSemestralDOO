@@ -24,11 +24,19 @@ public abstract class BaseWindow extends JPanel {
     protected BufferedImage backgroundImage;
     protected AppWindow appWindow;
 
+    /**
+     *
+     * @param appWindow es el JFrame que todos los JPanel tienen en comun
+     */
     public BaseWindow(AppWindow appWindow) {
         this.appWindow = appWindow;
     }
 
-    // se llama con el nombre del archivo, lo busca en Resources
+    /**
+     * sirve para cargar la imagen de fondo del Frame
+     * @param fileName es el nombre de la imagen que esta en
+     *                 la carpeta de recursos (Recources)
+     */
     protected void loadBackgroundImage(String fileName) {
         try {
             backgroundImage = ImageIO.read(
@@ -41,7 +49,11 @@ public abstract class BaseWindow extends JPanel {
         }
     }
 
-
+    /**
+     *
+     * @return paintComponent de la Imagen de fondo, es decir
+     * se carga el Jpanel con la imagen de fondo
+     */
     protected JPanel createBackgroundPanel() {
         return new JPanel() {
             @Override
@@ -73,6 +85,18 @@ public abstract class BaseWindow extends JPanel {
             }
         };
     }
+
+    /**
+     *
+     *
+     * BuildButton es un metodo para poder construir lo basico de un boton
+     * con esquinas redondeadas
+     * @param text el texto que va a contener el boton
+     * @param bgColor el color del boton
+     * @param hoverColor el color cuando el cursor esta sobre el boton
+     * @param textColor el color del texto que va a contener el boton
+     * @return el boton armado
+     */
     public static JButton buildButton(String text, Color bgColor, Color hoverColor, Color textColor) {
         JButton btn = new JButton() {
             @Override
@@ -246,6 +270,12 @@ public abstract class BaseWindow extends JPanel {
 
         return panel;
     }
+
+    /**
+     * Sirve para hacer un titulo para el JFrame
+     * @param texto El titulo que se quiere Ingresar
+     * @return el JLabel del Titulo
+     */
     protected JLabel buildTitulo(String texto) {
         JLabel lbl = new JLabel(texto);
         lbl.setFont(new Font("SansSerif", Font.BOLD, 28));
@@ -253,6 +283,8 @@ public abstract class BaseWindow extends JPanel {
         lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
         return lbl;
     }
+
+
 
     protected JLabel buildEtiqueta(String texto) {
         JLabel lbl = new JLabel(texto);
@@ -262,6 +294,11 @@ public abstract class BaseWindow extends JPanel {
         return lbl;
     }
 
+    /**
+     * Sirve para poder hacer un campo de texto rellenable
+     * @param placeholder
+     * @return
+     */
     protected JTextField buildCampoTexto(String placeholder) {
         JTextField campo = new JTextField();
         campo.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -275,6 +312,16 @@ public abstract class BaseWindow extends JPanel {
         return campo;
     }
 
+    /**
+     * Sirve Para Hacer un boton con texto demasiado largo,
+     * la principal diferencia con BuildButton es que
+     * el texto comienza a pintarse desde la izquierda y
+     * tiene dimensiones predeterminadas
+     * @param nombre texto que contiene el boton
+     * @param bg color del boton
+     * @param hover color del boton cuando el cursor esta sobre el
+     * @return el boton truncado
+     */
     protected JButton buildButtonTruncado(String nombre, Color bg, Color hover) {
         JButton btn = new JButton() {
             @Override
@@ -302,6 +349,9 @@ public abstract class BaseWindow extends JPanel {
         btn.setMaximumSize(new Dimension(160, 38));
         return btn;
     }
-    // Cada ventana construye su propio metodo de inicializacion
+
+    /**
+     * initUnit es el metodo de inicializacion estandar para todos los JPanel a crear
+     */
     protected abstract void initUI();
 }
