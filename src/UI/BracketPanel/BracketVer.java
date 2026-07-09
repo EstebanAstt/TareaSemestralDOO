@@ -183,4 +183,62 @@ public class BracketVer extends BaseWindow implements gestion.EstadoBracketsGest
     private void refrescarBracket() {
         construirRondas();
     }
+
+    private void manejarFormatoUnico(Match match, String disciplina) {
+        if (match.tieneResultado()) {
+            Participante ganador = match.getGanadorMatch();
+            String msg = ganador != null ? "Ganador: " + ganador.getName() : "El partido terminó en empate.";
+            JOptionPane.showMessageDialog(this, msg, "Resultado registrado", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        MatchResultado resultado = RegistrarResultadoDialogo.mostrar(this, match, disciplina, false);
+        if (resultado != null) {
+            match.setResultadoMatch(resultado);
+            bracketsGestion.registrarResultado(match);
+        }
+    }
+
+    private void manejarFormatoIdaVuelta(Match match, String disciplina) {
+        if (!match.tieneIda()) {
+            MatchResultado r = RegistrarResultadoDialogo.mostrar(this, match, disciplina, true);
+            if (r != null) {
+                match.setResultadoIda(r);
+                bracketsGestion.registrarResultado(match);
+            }
+        } else if (!match.tieneVuelta()) {
+            MatchResultado r = RegistrarResultadoDialogo.mostrar(this, match, disciplina, true);
+            if (r != null) {
+                match.setResultadoVuelta(r);
+
+                // Si el global sigue en empate, forzamos penales
+                if (match.getGanadorGlobal() == null) {
+                    gestionarPenales(match, disciplina);
+                } else {
+                    bracketsGestion.registrarResultado(match);
+                }
+            }
+        } else {
+            mostrarResultadoFinal(match);
+        }
+    }
+
+    private void gestionarPenales(Match match, String disciplina) {
+        JOptionPane.showMessageDialog(this,
+                "¡Empate global! Se jugará tanda de penales.",
+                "Empate", JOptionPane.INFORMATION_MESSAGE);
+
+        MatchResultado penales = RegistrarResultadoDialogo.mostrar(this, match, disciplina, false);
+        if (penales != null) {
+            match.setResultadoVuelta(penales);
+            bracketsGestion.registrarResultado(match);
+        }
+    }
+
+    private void mostrarResultadoFinal(Match match) {
+        JOptionPane.showMessageDialog(this,
+                "Global: " + match.getMarcadorGlobalUno() + " - " + match.getMarcadorGlobalDos() +
+                        "\nGanador: " + match.getGanadorGlobal().getName(),
+                "Resultado final", JOptionPane.INFORMATION_MESSAGE);
+    }
 }
