@@ -391,7 +391,7 @@ public class CrearTorneoPanel extends BaseWindow {
 
             if (formatoTorneo instanceof Liga) {
                 gestion.generarCalendarioLiga();
-                // TODO: appWindow.mostrarPanel(new LigaVer(appWindow, gestion));
+                appWindow.mostrarPanel(new PosicionesVer(appWindow, gestion));
             } else {
                 gestion.generarBracketEliminatoria(); // esto inicializa bracketsGestion
                 appWindow.setTorneoActivo(gestion);
