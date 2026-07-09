@@ -44,10 +44,54 @@ public class IdaVuelta implements TorneoFormato{
     }
 
     @Override
-    public void actualizarBracket(Match match, BracketsGestion bracketsGestion){
-        /** Aquí se debe ingresar la lógica de "Winners Bracket" y
-         * "Losers Bracket", se toman los métodos de match y
-         *  se registran las actualizaciones con bracketsGestion
-         */
+    public void actualizarBracket(Match matchJugado, BracketsGestion bracketsGestion) {
+        if (!matchJugado.tieneIda() || !matchJugado.tieneVuelta()) {
+            // Solo se jugó uno de los dos → refrescar UI para mostrar marcador parcial
+            bracketsGestion.notificarMatchActualizado(matchJugado);
+            return;
+        }
+
+        Participante ganador = matchJugado.getGanadorGlobal(); // ya vive en Match
+        if (ganador == null) {
+            // Empate global → no debería llegar aquí
+            bracketsGestion.notificarMatchActualizado(matchJugado);
+            return;
+        }
+
+        BracketUtils.asignarGanadorASiguiente(
+                ganador, matchJugado, bracketsGestion.getPartidosBracketsGestion());
+        bracketsGestion.notificarMatchActualizado(matchJugado);
+    }
+
+    private Match encontrarCompañero(Match match, ArrayList<Match> todos) {
+        for (Match m : todos) {
+            if (m != match
+                    && m.getRonda() == match.getRonda()
+                    && m.getPosicionBracket() == match.getPosicionBracket()
+                    && m.isEsVuelta() != match.isEsVuelta()) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    private Participante calcularGanadorGlobal(Match m1, Match m2) {
+        // Identificar cuál es ida y cuál es vuelta
+        Match ida    = m1.isEsVuelta() ? m2 : m1;
+        Match vuelta = m1.isEsVuelta() ? m1 : m2;
+
+        // En la vuelta los participantes están invertidos, hay que normalizar
+        int golesUnoIda     = ida.getResultado().getMarcadorUno();
+        int golesDosIda     = ida.getResultado().getMarcadorDos();
+        // En vuelta: participanteUno es el que era DOS en la ida
+        int golesUnoVuelta  = vuelta.getResultado().getMarcadorDos(); // normalizado
+        int golesDosVuelta  = vuelta.getResultado().getMarcadorUno(); // normalizado
+
+        int totalUno = golesUnoIda + golesUnoVuelta;
+        int totalDos = golesDosIda + golesDosVuelta;
+
+        if (totalUno > totalDos) return ida.getParticipanteUno();
+        if (totalDos > totalUno) return ida.getParticipanteDos();
+        return null; // empate global
     }
 }
