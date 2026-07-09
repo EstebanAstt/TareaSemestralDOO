@@ -1,6 +1,9 @@
 package gestion;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import modelo.Equipo;
 import modelo.Match;
@@ -122,5 +125,33 @@ public class BracketsGestion {
      */
     public int getCantidadPartidosEsperados(Equipo equipo){
         return formato.getCantidadMatches(equipo);
+    }
+
+    /**
+     * Agrupa los partidos por ronda y filtra aquellas fases donde
+     * aún no hay ningún participante definido.
+     *
+     * @return Un mapa ordenado con el número de ronda y sus partidos correspondientes.
+     */
+    public Map<Integer, List<Match>> obtenerRondasVisibles() {
+        Map<Integer, List<Match>> porRonda = new LinkedHashMap<>();
+
+        // Se Agrupan todos los partidos por su número de ronda
+        for (Match m : getPartidosBracketsGestion()) {
+            porRonda.computeIfAbsent(m.getRonda(), k -> new ArrayList<>()).add(m);
+        }
+
+        // Se filtra dejando solo las rondas que tengan al menos un participante
+        Map<Integer, List<Match>> rondasVisibles = new LinkedHashMap<>();
+        for (Map.Entry<Integer, List<Match>> entry : porRonda.entrySet()) {
+            boolean tieneParticipantes = entry.getValue().stream()
+                    .anyMatch(m -> m.getParticipanteUno() != null || m.getParticipanteDos() != null);
+
+            if (tieneParticipantes) {
+                rondasVisibles.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return rondasVisibles;
     }
 }
