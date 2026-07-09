@@ -31,6 +31,8 @@ public enum ColorPalette {
 
     COLOR_BG_LIGHT(new Color(255, 255, 255, 200)),
 
+    COLOR_LINEBORDER_LIGHT(new Color(255, 255, 255, 200)),
+
     COLOR_TXT_FIELD(new Color(163, 160, 160, 200));
 
 
