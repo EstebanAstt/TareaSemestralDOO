@@ -1,6 +1,6 @@
 package UI.rol;
 
-import UI.CrearTorneoPanel;
+import UI.CrearTorneoPanel.CrearTorneoPanel;
 import UI.Resources.AppWindow;
 
 import javax.swing.*;
