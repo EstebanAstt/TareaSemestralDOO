@@ -19,10 +19,16 @@ import java.util.List;
  */
 public class ParticipanteLoader {
 
+    /**
+     * Constructor por defecto
+     */
     private ParticipanteLoader() {}
 
     /**
      * Lee un archivo .txt y devuelve un Equipo con sus jugadores.
+     * @param archivo Archivo de texto ingresado
+     * @return Equipo que está en el archivo de texto
+     * @throws IOException Se lanza cuando el archivo está vacio
      */
     public static Equipo cargarEquipo(File archivo) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
@@ -47,6 +53,9 @@ public class ParticipanteLoader {
 
     /**
      * Lee un archivo .txt y devuelve una lista de jugadores individuales.
+     * @param archivo Archivo de texto ingresado
+     * @return Lista de jugadores que está en el archivo de texto
+     * @throws IOException Se lanza cuando el archivo está vacío
      */
     public static List<Jugador> cargarJugadores(File archivo) throws IOException {
         List<Jugador> jugadores = new ArrayList<>();
