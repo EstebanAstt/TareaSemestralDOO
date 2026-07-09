@@ -1,0 +1,16 @@
+Novak Djokovic, njokovic_tennis@mail.com
+Carlos Alcaraz, c_alcaraz_pro@mail.com
+Jannik Sinner, sinner_team@mail.com
+Daniil Medvedev, medvedev_official@mail.com
+Alexander Zverev, zverev_atp@mail.com
+Rafael Nadal, rafa_nadal_tenis@mail.com
+Roger Federer, federer_legend@mail.com
+Iga Swiatek, swiatek_pro@mail.com
+Aryna Sabalenka, sabalenka_tennis@mail.com
+Coco Gauff, coco_gauff_official@mail.com
+Elena Rybakina, rybakina_sport@mail.com
+Jessica Pegula, pegula_tennis@mail.com
+Stefanos Tsitsipas, tsitsipas_atp@mail.com
+Andrey Rublev, rublev_pro@mail.com
+Casper Ruud, ruud_tennis@mail.com
+Taylor Fritz, fritz_official@mail.com
