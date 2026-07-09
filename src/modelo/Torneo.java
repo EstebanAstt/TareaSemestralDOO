@@ -117,5 +117,4 @@ public class Torneo {
     public ArrayList<Match> getMatches(){
         return listaMatches;
     }
-    }
 }
