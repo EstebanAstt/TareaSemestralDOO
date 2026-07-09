@@ -19,17 +19,25 @@ import java.util.List;
  */
 public class GeneradorLigaGestion {
 
+    /**
+     * Constructor por defecto
+     */
     private GeneradorLigaGestion() {}
 
+    /**
+     * Genera el calendario
+     * @param participantes Lista de participantes para determinar "N"
+     * @return ArrayList de jornadas en total
+     */
     public static List<JornadaGestion> generar(List<Participante> participantes) {
         if (participantes == null || participantes.size() < 2) {
             throw new IllegalArgumentException("Se necesitan al menos 2 participantes.");
         }
 
-        // Trabajamos sobre una copia para no modificar la original
+        /** Trabajamos sobre una copia para no modificar la original */
         List<Participante> lista = new ArrayList<>(participantes);
 
-        // Si N es impar, añadimos un "bye" para cuadrar el algoritmo
+        /** Si N es impar, añadimos un "bye" para cuadrar el algoritmo */
         boolean impar = lista.size() % 2 != 0;
         if (impar) lista.add(null); // null representa el "bye"
 
@@ -46,15 +54,14 @@ public class GeneradorLigaGestion {
                 Participante local    = lista.get(i);
                 Participante visitante = lista.get(n - 1 - i);
 
-                // Descartamos partidos contra el "bye"
+                /** Descartamos partidos contra el "bye" */
                 if (local != null && visitante != null) {
                     partidos.add(new Match(local, visitante, jornada + 1));
                 }
             }
-
             jornadas.add(new JornadaGestion(jornada + 1, partidos));
 
-            // Rotar: el primer elemento es fijo, rotamos el resto
+            /** Rotar: el primer elemento es fijo, rotamos el resto */
             rotar(lista);
         }
 
@@ -64,15 +71,16 @@ public class GeneradorLigaGestion {
     /**
      * Rota la lista manteniendo el primer elemento fijo.
      * [A, B, C, D] → [A, D, B, C]
+     * @param lista Lista de participantes ingresada
      */
     private static void rotar(List<Participante> lista) {
-        // Guardamos el último
+        /** Guardamos el último */
         Participante ultimo = lista.get(lista.size() - 1);
-        // Desplazamos hacia la derecha desde la posición 1
+        /** Desplazamos hacia la derecha desde la posición 1 */
         for (int i = lista.size() - 1; i > 1; i--) {
             lista.set(i, lista.get(i - 1));
         }
-        // El último pasa a la posición 1
+        /** El último pasa a la posición 1 */
         lista.set(1, ultimo);
     }
 }
