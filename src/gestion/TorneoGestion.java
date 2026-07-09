@@ -141,6 +141,18 @@ public class TorneoGestion {
         }
     }
 
+    /** Aplana todas las jornadas en una lista plana de matches. */
+    public List<Match> obtenerTodosPartidos() {
+        List<Match> todos = new ArrayList<>();
+        List<JornadaGestion> jornadas = this.getJornadas();
+        if (jornadas != null) {
+            for (JornadaGestion j : jornadas) {
+                todos.addAll(j.getPartidos());
+            }
+        }
+        return todos;
+    }
+
     // ─────────────────────────────────────────────────────────────────
     // Getters
     // ─────────────────────────────────────────────────────────────────
