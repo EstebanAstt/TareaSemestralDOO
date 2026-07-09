@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Match {
     private Participante participanteUno;
     private Participante participanteDos;
+    private final boolean esVuelta;
 
     /** Se registra el resultado en esta variable */
     private MatchResultado resultado;
@@ -18,16 +19,25 @@ public class Match {
     private int ronda;
     private int posicionBracket;
 
+
+    /**
+     * util para el formato ida y vuelta
+     */
+    private MatchResultado resultadoIda;
+    private MatchResultado resultadoVuelta;
+    private boolean esIdaVuelta = false;
+
     /** Constructor sin posición en bracket, sirve para el formato de liga */
     public Match(Participante participanteUno, Participante participanteDos, int ronda){
         this.participanteUno = participanteUno;
         this.participanteDos = participanteDos;
         this.ronda = ronda;
+        this.esVuelta = false;
     }
 
     /** Constructor con posición en bracket, sirve para eliminatorias */
     public Match(Participante participanteUno, Participante participanteDos,
-                 int ronda, int posicionBracket, LocalDateTime fecha){
+                 int ronda, int posicionBracket, LocalDateTime fecha, boolean esVuelta){
 
         if (ronda < 1){
             throw new IllegalArgumentException("Debe existir por lo menos una ronda");
@@ -41,6 +51,8 @@ public class Match {
         this.ronda = ronda;
         this.posicionBracket = posicionBracket;
         this.fecha = fecha;
+        this.esVuelta = esVuelta;
+
     }
 
     /**
@@ -109,6 +121,7 @@ public class Match {
     }
 
     public int getRonda() { return ronda; }
+    public boolean isEsVuelta() { return esVuelta; }
 
     /**
      * Asigna el participante uno y dos al match.
@@ -119,5 +132,39 @@ public class Match {
 
     public int getPosicionBracket() {
         return posicionBracket;
+    }
+
+    /**
+     * setters y getters para el formato de ida y vuelta
+     */
+
+    public void setResultadoIda(MatchResultado r)    { this.resultadoIda = r; }
+    public void setResultadoVuelta(MatchResultado r) { this.resultadoVuelta = r; }
+    public boolean tieneIda()    { return resultadoIda != null; }
+    public boolean tieneVuelta() { return resultadoVuelta != null; }
+    public boolean isIdaVuelta() { return esIdaVuelta; }
+    public void setEsIdaVuelta(boolean v) { this.esIdaVuelta = v; }
+
+    /** Marcador global: suma de ambos partidos, normalizado */
+    public int getMarcadorGlobalUno() {
+        int golesIda    = tieneIda()    ? resultadoIda.getMarcadorUno()    : 0;
+        int golesVuelta = tieneVuelta() ? resultadoVuelta.getMarcadorUno() : 0; //igual posición
+        return golesIda + golesVuelta;
+    }
+
+    public int getMarcadorGlobalDos() {
+        int golesIda    = tieneIda()    ? resultadoIda.getMarcadorDos()    : 0;
+        int golesVuelta = tieneVuelta() ? resultadoVuelta.getMarcadorDos() : 0; //igual posición
+        return golesIda + golesVuelta;
+    }
+
+
+    public Participante getGanadorGlobal() {
+        if (!tieneIda() || !tieneVuelta()) return null;
+        int g1 = getMarcadorGlobalUno();
+        int g2 = getMarcadorGlobalDos();
+        if (g1 > g2) return participanteUno;
+        if (g2 > g1) return participanteDos;
+        return null; // empate global
     }
 }
