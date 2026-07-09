@@ -5,6 +5,9 @@ import modelo.enums.AccionPartido;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa el resultado de un enfrentamiento
+ */
 public class MatchResultado {
 
     /** Puntajes de tipo double que deben ser enteros en fútbol y basket */
@@ -17,7 +20,6 @@ public class MatchResultado {
     /** Enum para ver si existe un ganador o empate */
     private DeterminarGanador outcome;
 
-
     /** Lista de eventos ocurridos durante el partido */
     private final List<EventoPartido> eventos = new ArrayList<>();
 
@@ -27,9 +29,9 @@ public class MatchResultado {
 
     /**
      * Determina un ganador empate dependiendo de los puntajes ingresados
-     * @param puntaje1 puntaje del primer participante
-     * @param puntaje2 puntaje del segundo participante
-     * @return el resultado dependiendo los puntajes ingresados
+     * @param puntaje1 Puntaje del primer participante
+     * @param puntaje2 Puntaje del segundo participante
+     * @return El resultado dependiendo los puntajes ingresados
      */
     public DeterminarGanador setDeterminarGanador(double puntaje1, double puntaje2){
         if (puntaje1 > puntaje2) return DeterminarGanador.PARTICIPANTE_UNO_GANA;
@@ -37,7 +39,11 @@ public class MatchResultado {
         return DeterminarGanador.EMPATE;
     }
 
-    /** Constructor para Futbol y basket */
+    /**
+     * Constructor para fútbol y basket
+     * @param puntajeUno Puntaje del primer participante
+     * @param puntajeDos Puntaje del segundo participante
+     */
     public MatchResultado(int puntajeUno, int puntajeDos){
         if (puntajeUno < 0 || puntajeDos < 0){
             throw new IllegalArgumentException("Los puntajes no pueden ser negativos");
@@ -58,7 +64,7 @@ public class MatchResultado {
 
     /**
      * Constructor para Tenis
-     * @param setsTenis lista de sets de tenis
+     * @param setsTenis Lista de sets de tenis
      */
     public MatchResultado(ArrayList<SetTenis> setsTenis){
         if (setsTenis.size() < 2){
@@ -90,7 +96,7 @@ public class MatchResultado {
     /**
      * Verifica que los puntajes sean válidos al tener un enfrentamiento de ajedrez
      * @param puntajeUno puntaje del primer participante
-     * @param puntajeDos puntake del segundo participante
+     * @param puntajeDos puntaje del segundo participante
      */
     public void validarPuntajesAjedrez(double puntajeUno, double puntajeDos){
         boolean puntajeUnoValido = puntajeUno == 0.0 || puntajeUno == 0.5
@@ -109,7 +115,12 @@ public class MatchResultado {
         }
     }
 
-    /** Constructor para Ajedrez */
+    /**
+     * Constructor para Ajedrez
+     * @param puntajeUno Puntaje del primer participante
+     * @param puntajeDos Puntaje del segundo participante
+     * @param esAjedrez Variable booleana que verifica que la disciplina es de ajedrez
+     */
     public MatchResultado(double puntajeUno, double puntajeDos, boolean esAjedrez){
         if (!esAjedrez) {
             validarPuntajesAjedrez(puntajeUno, puntajeDos);
@@ -121,35 +132,48 @@ public class MatchResultado {
 
     /**
      * Verifica que el resultado actual es empate
-     * @return variable enum si resulta en empate
+     * @return Variable enum si resulta en empate
      */
     public boolean esEmpate(){
         return outcome == DeterminarGanador.EMPATE;
     }
 
-    /** Getters */
+    /**
+     * Getter del "outcome" del enfrentamiento
+     * @return Variable enum DeterminarGanador
+     */
     public DeterminarGanador getOutcome(){
         return outcome;
     }
 
+    /**
+     * Getter del puntaje del primer participante
+     * @return Variable double del puntaje
+     */
     public double getPuntajeUno() {
         return puntajeUno;
     }
 
+    /**
+     * Getter del puntaje del segundo participante
+     * @return Variable double del puntaje
+     */
     public double getPuntajeDos() {
         return puntajeDos;
     }
 
+    /**
+     * Getter de los sets de tenis
+     * @return ArrayList de los sets de tenis
+     */
     public ArrayList<SetTenis> getSetsTenis(){
         return setsTenis;
     }
 
-
     /**
      * Registra un evento en el partido y actualiza el marcador.
-     *
-     * @param evento            el evento a registrar
-     * @param esParticipanteUno true si el equipoOrigen es el participante uno del Match
+     * @param evento            El evento a registrar
+     * @param esParticipanteUno True si el equipoOrigen es el participante uno del Match
      */
     public void registrarEvento(EventoPartido evento, boolean esParticipanteUno) {
         if (evento == null) throw new IllegalArgumentException("El evento no puede ser nulo.");
@@ -159,20 +183,20 @@ public class MatchResultado {
         if (puntos == 0) return; // tarjetas y similares no mueven el marcador
 
         if (evento.getAccion() == AccionPartido.AJEDREZ_TABLAS) {
-            // Tablas: suma 1 a cada uno
+            /** Tablas: suma 1 a cada uno */
             marcadorUno++;
             marcadorDos++;
         } else if (evento.getAccion().isSumaAlRival()) {
-            // Autogol: suma al rival
+            /** Autogol: suma al rival */
             if (esParticipanteUno) marcadorDos += puntos;
             else                   marcadorUno += puntos;
         } else {
-            // Caso normal
+            /** Caso normal */
             if (esParticipanteUno) marcadorUno += puntos;
             else                   marcadorDos += puntos;
         }
 
-        // Recalcular outcome
+        /** Recalcular outcome */
         this.outcome = setDeterminarGanador(marcadorUno, marcadorDos);
     }
 

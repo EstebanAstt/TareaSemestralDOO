@@ -2,6 +2,9 @@ package modelo;
 
 import java.time.LocalDateTime;
 
+/**
+ * Representa un enfrentamiento
+ */
 public class Match {
     private Participante participanteUno;
     private Participante participanteDos;
