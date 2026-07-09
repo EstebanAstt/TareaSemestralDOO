@@ -286,7 +286,7 @@ public abstract class BaseWindow extends JPanel {
 
 
 
-    protected JLabel buildEtiqueta(String texto) {
+    public JLabel buildEtiqueta(String texto) {
         JLabel lbl = new JLabel(texto);
         lbl.setFont(new Font("SansSerif", Font.BOLD, 14));
         lbl.setForeground(new Color(50, 50, 50));
@@ -299,7 +299,7 @@ public abstract class BaseWindow extends JPanel {
      * @param placeholder
      * @return
      */
-    protected JTextField buildCampoTexto(String placeholder) {
+    public JTextField buildCampoTexto(String placeholder) {
         JTextField campo = new JTextField();
         campo.setFont(new Font("SansSerif", Font.PLAIN, 14));
         campo.putClientProperty("JTextField.placeholderText", placeholder);
@@ -322,7 +322,7 @@ public abstract class BaseWindow extends JPanel {
      * @param hover color del boton cuando el cursor esta sobre el
      * @return el boton truncado
      */
-    protected JButton buildButtonTruncado(String nombre, Color bg, Color hover) {
+    public JButton buildButtonTruncado(String nombre, Color bg, Color hover) {
         JButton btn = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
