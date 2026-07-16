@@ -17,7 +17,7 @@ public class MenuOpcionesPanel extends BaseWindow {
     private static final int BTN_WIDTH = 280;
     private static final int BTN_HEIGHT = 50;
     private static final int BTN_X = 50;
-    private static final int BTN_Y = 420;
+    private static final int BTN_Y = 320;
     private static final int BTN_MARGIN_Y = 80;
 
 

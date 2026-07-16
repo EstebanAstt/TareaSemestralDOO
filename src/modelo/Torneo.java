@@ -117,4 +117,11 @@ public class Torneo {
     public ArrayList<Match> getMatches(){
         return listaMatches;
     }
+    /**
+     * Setter para actualizar el estado del torneo
+     * @param nuevoEstado El estado al que se quiere cambiar
+     */
+    public void setEstado(EstadoTorneo nuevoEstado) {
+        this.estado = nuevoEstado;
+    }
 }

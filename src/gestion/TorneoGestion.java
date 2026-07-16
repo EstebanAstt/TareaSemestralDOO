@@ -10,7 +10,7 @@ import modelo.Participante;
 import modelo.Torneo;
 import modelo.disciplina.Disciplina;
 import modelo.formato.TorneoFormato;
-
+import modelo.EstadoTorneo;
 /**
  * Define las principales acciones de un Organizador de un torneo
  */
@@ -127,7 +127,41 @@ public class TorneoGestion {
         this.bracketsGestion = new BracketsGestion(torneo.getFormatoTorneo());
         return bracketsGestion.generarBracket(contenedor);
     }
+    // ─────────────────────────────────────────────────────────────────
+    // Finalización del torneo
+    // ─────────────────────────────────────────────────────────────────
 
+    /**
+     * Finaliza el torneo en curso.
+     * Aplica una validación lógica contando los partidos para evitar
+     * que se cierre un torneo con encuentros pendientes.
+     */
+    public void finalizarTorneo() {
+        verificarTorneoActivo();
+
+        List<Match> todosLosPartidos = obtenerTodosPartidos();
+        int partidosPendientes = 0;
+
+        // Validacion numerica: verificamos cada partido
+        for (Match partido : todosLosPartidos) {
+            if (!partido.tieneResultado()) {
+                partidosPendientes++;
+            }
+        }
+
+        // Si el contador es mayor a 0, bloqueamos la accion
+        if (partidosPendientes > 0) {
+            throw new IllegalStateException("Operación denegada: Quedan " + partidosPendientes + " partidos pendientes sin resultado.");
+        }
+
+        // Cambiamos el estado oficial del torneo a finalizado
+        torneo.setEstado(EstadoTorneo.TORNEO_FINALIZADO);
+
+        // Cortamos las referencias numericas y de objetos para limpiar la gestion
+        this.torneo = null;
+        this.jornadas = null;
+        this.bracketsGestion = null;
+    }
     // ─────────────────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────────────────

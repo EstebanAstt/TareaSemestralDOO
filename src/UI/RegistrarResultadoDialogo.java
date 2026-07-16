@@ -231,8 +231,10 @@ public class RegistrarResultadoDialogo extends JDialog {
 
     /** Botón de acción: rectángulo redondeado de color primario */
     private JButton buildBotonAccion(AccionPartido accion, Participante participante, boolean esUno) {
-        JButton btn = buildButton("", BTN_BG, BTN_HOVER, BTN_FG);
+        JButton btn = buildButton("+", BTN_BG, BTN_HOVER, BTN_FG);
         btn.setPreferredSize(new Dimension(130, 38));
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("SansSerif", Font.BOLD, 18));
         // Tooltip para ayudar a identificar a qué equipo corresponde
         btn.setToolTipText(participante.getName() + " -> " + accion.getNombre());
         btn.addActionListener(e -> onAccion(accion, participante, esUno));

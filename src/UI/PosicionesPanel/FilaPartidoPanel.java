@@ -57,6 +57,7 @@ public class FilaPartidoPanel extends JPanel {
             // Usamos el método buildButton del padre (BaseWindow)
             btnCentro = parent.buildButton(marcador, bgResultado, bgResultado.darker(),
                     ColorPalette.COLOR_TEXT_LIGHT.getColor());
+                    btnCentro.setForeground(Color.WHITE);
 
             // Resaltar ganador 1
             if (ganador != null && ganador.equals(p1)) {

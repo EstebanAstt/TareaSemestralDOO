@@ -1,5 +1,7 @@
 package UI.rol;
 
+import UI.PosicionesPanel.PosicionesVer;
+import UI.Resources.AppWindow;
 import javax.swing.*;
 
 public class EspectadorStrategy implements RolStrategy {
@@ -14,8 +16,23 @@ public class EspectadorStrategy implements RolStrategy {
     public void ejecutarOpcion(String opcion, JPanel actualPanel) {
         switch (opcion) {
             case "Ver Torneos" -> {
-                // new VerTorneos(false).setVisible(true); // false = modo espectador (sin eliminar)
-                System.out.println("[LOG] Abrir: Ver Torneos (modo Espectador)");
+                AppWindow appWindow = (AppWindow) SwingUtilities.getWindowAncestor(actualPanel);
+                gestion.TorneoGestion torneoActivo = appWindow.getTorneoActivo();
+
+                if (torneoActivo == null) {
+                    JOptionPane.showMessageDialog(
+                            actualPanel,
+                            "Aún no hay ningún torneo creado en el sistema para visualizar.",
+                            "Sin Torneos",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                } else {
+                    if (torneoActivo.getTorneo().getFormatoTorneo() instanceof modelo.formato.Liga) {
+                        appWindow.mostrarPanel(new UI.PosicionesPanel.PosicionesVer(appWindow, torneoActivo));
+                    } else {
+                        appWindow.mostrarPanel(new UI.BracketPanel.BracketVer(appWindow, torneoActivo));
+                    }
+                }
             }
             default -> System.err.println("Opción no reconocida: " + opcion);
         }
